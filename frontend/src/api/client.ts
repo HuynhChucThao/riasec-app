@@ -1,0 +1,134 @@
+import { Occupation, Question, TestHistoryItem, TestResult, User } from '../types';
+
+const API_BASE = '/api';
+
+class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
+export const getAuthToken = (): string | null => {
+  return localStorage.getItem('riasec_token');
+};
+
+export const setAuthToken = (token: string | null) => {
+  if (token) {
+    localStorage.setItem('riasec_token', token);
+  } else {
+    localStorage.removeItem('riasec_token');
+  }
+};
+
+async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  const token = getAuthToken();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options.headers as Record<string, string> || {}),
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers,
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const errorMsg = data?.message || data?.error || `Request failed with status ${response.status}`;
+    throw new ApiError(Array.isArray(errorMsg) ? errorMsg.join(', ') : errorMsg, response.status);
+  }
+
+  return data as T;
+}
+
+// 1. Auth APIs
+export const authApi = {
+  login: (credentials: { email: string; password: string }) =>
+    request<{ user: User; token: string }>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+    }),
+
+  register: (data: { email: string; password: string; name?: string; dreamWork?: string }) =>
+    request<{ user: User; token: string }>('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  getProfile: () => request<User>('/auth/profile'),
+
+  updateProfile: (data: Partial<User>) =>
+    request<User>('/users/me', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+};
+
+// 2. Occupations APIs
+export const occupationApi = {
+  getAll: (params?: { keyword?: string; riasecCode?: string; mainCode?: string; page?: number; limit?: number }) => {
+    const query = new URLSearchParams();
+    if (params?.keyword) query.append('keyword', params.keyword);
+    if (params?.riasecCode) query.append('riasecCode', params.riasecCode);
+    if (params?.mainCode) query.append('mainCode', params.mainCode);
+    if (params?.page) query.append('page', params.page.toString());
+    if (params?.limit) query.append('limit', params.limit.toString());
+    return request<{ items: Occupation[]; data?: Occupation[]; total: number; page: number; limit: number }>(`/occupations?${query.toString()}`);
+  },
+
+  getById: (id: number) => request<Occupation>(`/occupations/${id}`),
+};
+
+
+// 3. Assessment & Questions APIs
+export const assessmentApi = {
+  getQuestions: (type?: string) => {
+    const endpoint = type ? `/questions?type=${type}` : '/questions';
+    return request<Question[]>(endpoint);
+  },
+
+  submitTest: (data: { scores: Record<string, number>; answers?: Record<string, number> }) =>
+    request<TestResult>('/assessment/submit', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  getHistory: () => request<TestHistoryItem[]>('/assessment/history'),
+
+  getHistoryDetail: (id: string) => request<TestHistoryItem>(`/assessment/history/${id}`),
+};
+
+// 4. Saved Jobs APIs
+export const savedJobsApi = {
+  getSaved: () => request<Occupation[]>('/saved-jobs'),
+
+  toggleSave: (occupationId: number) =>
+    request<{ saved: boolean }>(`/saved-jobs/${occupationId}`, {
+      method: 'POST',
+    }),
+};
+
+// 5. AI Consultant APIs
+export const aiApi = {
+  chat: (message: string, context?: { userRiasec?: string; currentOccupation?: string }) =>
+    request<{ reply: string; sources?: string[] }>('/ai-consultant/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, ...context }),
+    }),
+};
+
+// 6. Feedback APIs
+export const feedbackApi = {
+  submit: (content: string, rating: number = 5) =>
+    request<{ success: boolean; message: string }>('/feedback', {
+      method: 'POST',
+      body: JSON.stringify({ content, rating }),
+    }),
+};

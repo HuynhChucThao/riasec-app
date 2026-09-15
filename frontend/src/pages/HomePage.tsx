@@ -1,0 +1,196 @@
+import React, { useEffect, useState } from 'react';
+import { ArrowRight, BookOpen, Compass, Sparkles, TrendingUp } from 'lucide-react';
+import { occupationApi, savedJobsApi } from '../api/client';
+import { CareerCard } from '../components/common/CareerCard';
+import { RiasecBadge } from '../components/common/RiasecBadge';
+import { useAuth } from '../context/AuthContext';
+import { Occupation, RIASEC_MAP, RiasecKey } from '../types';
+
+interface HomePageProps {
+  onNavigate: (page: string, params?: Record<string, unknown>) => void;
+  onSelectOccupation: (occ: Occupation) => void;
+}
+
+export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectOccupation }) => {
+  const { user, openAuthModal } = useAuth();
+  const [popularOccupations, setPopularOccupations] = useState<Occupation[]>([]);
+  const [savedJobIds, setSavedJobIds] = useState<Set<number>>(new Set());
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const res = await occupationApi.getAll({ limit: 6 });
+        setPopularOccupations(res.items || res.data || []);
+
+        if (user) {
+          const saved = await savedJobsApi.getSaved().catch(() => []);
+          setSavedJobIds(new Set(saved.map((j) => j.id)));
+        }
+      } catch (err) {
+        console.error('Lỗi tải dữ liệu trang chủ:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [user]);
+
+  const handleToggleSave = async (occ: Occupation, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      openAuthModal();
+      return;
+    }
+    try {
+      const res = await savedJobsApi.toggleSave(occ.id);
+      setSavedJobIds((prev) => {
+        const next = new Set(prev);
+        if (res.saved) next.add(occ.id);
+        else next.delete(occ.id);
+        return next;
+      });
+    } catch (err) {
+      console.error('Lỗi lưu nghề:', err);
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {/* 1. Welcome Hero Card (Matching fragment_home.xml cardWelcome) */}
+      <div className="card-welcome">
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#E0F2FE', color: '#0369A1', padding: '4px 12px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, marginBottom: 14 }}>
+          <Sparkles size={14} /> MÔ HÌNH HƯỚNG NGHIỆP RIASEC CHUẨN QUỐC TẾ
+        </div>
+
+        <h2
+          style={{
+            fontSize: '1.45rem',
+            fontWeight: 800,
+            fontFamily: 'var(--font-heading)',
+            color: 'var(--text-primary)',
+            lineHeight: 1.3,
+            marginBottom: 8,
+          }}
+        >
+          Chào mừng đến với RIASEC Career Test
+        </h2>
+
+        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: 20 }}>
+          Khám phá tiềm năng bản thân, xác định nhóm tính cách nổi trội và định hướng nghề nghiệp phù hợp nhất cho tương lai của bạn.
+        </p>
+
+        <button className="btn-primary" onClick={() => onNavigate('pre-test')}>
+          <span>Bắt Đầu Làm Bài Test Ngay</span>
+          <ArrowRight size={18} />
+        </button>
+      </div>
+
+      {/* 2. RIASEC 6 Personality Types Quick Overview */}
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <BookOpen size={18} color="var(--primary-teal)" />
+            6 Nhóm Tính Cách RIASEC
+          </h3>
+          <span
+            style={{ fontSize: '0.8rem', color: 'var(--primary-teal)', fontWeight: 600, cursor: 'pointer' }}
+            onClick={() => onNavigate('explore')}
+          >
+            Khám phá &rarr;
+          </span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
+          {(Object.keys(RIASEC_MAP) as RiasecKey[]).map((key) => {
+            const item = RIASEC_MAP[key];
+            return (
+              <div
+                key={key}
+                onClick={() => onNavigate('explore', { mainCode: key })}
+                style={{
+                  background: 'white',
+                  borderRadius: 14,
+                  padding: '12px 14px',
+                  border: '1px solid var(--border-color)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 6,
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = item.color)}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border-color)')}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <RiasecBadge code={key} size="md" />
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>{item.nameEn}</span>
+                </div>
+                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                  {item.nameVi.split('/')[0]}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. Recommended & Popular Careers Section */}
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <TrendingUp size={18} color="var(--primary-teal)" />
+            Nghề Nghiệp Đề Xuất Nổi Bật
+          </h3>
+          <span
+            style={{ fontSize: '0.8rem', color: 'var(--primary-teal)', fontWeight: 600, cursor: 'pointer' }}
+            onClick={() => onNavigate('explore')}
+          >
+            Xem tất cả
+          </span>
+        </div>
+
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '30px 0', color: 'var(--text-muted)', fontSize: '0.88rem' }}>
+            Đang tải dữ liệu nghề nghiệp...
+          </div>
+        ) : popularOccupations.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {popularOccupations.map((occ) => (
+              <CareerCard
+                key={occ.id}
+                occupation={occ}
+                onClick={onSelectOccupation}
+                onToggleSave={handleToggleSave}
+                isSaved={savedJobIds.has(occ.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div
+            style={{
+              background: 'white',
+              borderRadius: 16,
+              padding: 24,
+              textAlign: 'center',
+              border: '1px dashed var(--border-color)',
+            }}
+          >
+            <Compass size={32} color="var(--text-muted)" style={{ margin: '0 auto 10px' }} />
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
+              Hãy thực hiện bài trắc nghiệm RIASEC để nhận các gợi ý nghề nghiệp cá nhân hóa dành riêng cho bạn!
+            </p>
+            <button
+              className="btn-primary"
+              style={{ marginTop: 14, width: 'auto', display: 'inline-flex' }}
+              onClick={() => onNavigate('pre-test')}
+            >
+              Làm bài test ngay
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
