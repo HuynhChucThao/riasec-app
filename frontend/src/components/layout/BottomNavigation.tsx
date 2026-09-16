@@ -19,7 +19,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         <div className="nav-icon-wrapper">
           <Home size={22} />
         </div>
-        <span>Trang chủ</span>
+        <span>Home</span>
       </button>
 
       <button
@@ -29,14 +29,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         <div className="nav-icon-wrapper">
           <Compass size={22} />
         </div>
-        <span>Khám phá</span>
+        <span>Explore</span>
       </button>
 
       {/* Center Floating AI Button */}
       <button
         className={`nav-item ai-center-btn ${activeTab === 'ai' ? 'active' : ''}`}
         onClick={() => onSelectTab('ai')}
-        title="Trợ lý AI Định hướng nghề"
+        title="AI Career Advisor"
       >
         <Bot size={26} />
       </button>
@@ -48,7 +48,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         <div className="nav-icon-wrapper">
           <History size={22} />
         </div>
-        <span>Lịch sử</span>
+        <span>History</span>
       </button>
 
       <button
@@ -58,7 +58,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         <div className="nav-icon-wrapper">
           <User size={22} />
         </div>
-        <span>Cá nhân</span>
+        <span>Profile</span>
       </button>
     </nav>
   );

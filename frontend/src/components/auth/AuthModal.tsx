@@ -31,7 +31,7 @@ export const AuthModal: React.FC = () => {
       setName('');
       setDreamWork('');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Có lỗi xảy ra, vui lòng thử lại');
+      setError(err instanceof Error ? err.message : 'An error occurred, please try again');
     } finally {
       setLoading(false);
     }
@@ -56,12 +56,12 @@ export const AuthModal: React.FC = () => {
           <Sparkles size={24} />
         </div>
         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-          {tab === 'login' ? 'Chào mừng bạn trở lại' : 'Tạo tài khoản RIASEC'}
+          {tab === 'login' ? 'Welcome Back' : 'Create RIASEC Account'}
         </h2>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 4 }}>
           {tab === 'login'
-            ? 'Đăng nhập để lưu kết quả bài test và nghề nghiệp'
-            : 'Khám phá tiềm năng nghề nghiệp phù hợp với tính cách'}
+            ? 'Sign in to save test results and favorite careers'
+            : 'Discover career potential tailored to your personality'}
         </p>
       </div>
 
@@ -91,7 +91,7 @@ export const AuthModal: React.FC = () => {
             transition: 'all 0.2s',
           }}
         >
-          Đăng Nhập
+          Log In
         </button>
         <button
           type="button"
@@ -108,7 +108,7 @@ export const AuthModal: React.FC = () => {
             transition: 'all 0.2s',
           }}
         >
-          Đăng Ký
+          Register
         </button>
       </div>
 
@@ -132,14 +132,14 @@ export const AuthModal: React.FC = () => {
         {tab === 'register' && (
           <div>
             <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>
-              Họ và tên
+              Full Name
             </label>
             <div className="search-wrapper">
               <UserIcon size={16} color="var(--text-muted)" />
               <input
                 type="text"
                 className="search-input"
-                placeholder="Nguyễn Văn A"
+                placeholder="John Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -167,7 +167,7 @@ export const AuthModal: React.FC = () => {
 
         <div>
           <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>
-            Mật khẩu
+            Password
           </label>
           <div className="search-wrapper">
             <Lock size={16} color="var(--text-muted)" />
@@ -185,14 +185,14 @@ export const AuthModal: React.FC = () => {
         {tab === 'register' && (
           <div>
             <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6, display: 'block' }}>
-              Nghề nghiệp mơ ước (tùy chọn)
+              Dream Career (optional)
             </label>
             <div className="search-wrapper">
               <Sparkles size={16} color="var(--text-muted)" />
               <input
                 type="text"
                 className="search-input"
-                placeholder="Kỹ sư phần mềm, Bác sĩ, Họa sĩ..."
+                placeholder="Software Engineer, Doctor, Designer..."
                 value={dreamWork}
                 onChange={(e) => setDreamWork(e.target.value)}
               />
@@ -206,7 +206,7 @@ export const AuthModal: React.FC = () => {
           style={{ marginTop: 8 }}
           disabled={loading}
         >
-          {loading ? 'Đang xử lý...' : tab === 'login' ? 'Đăng Nhập' : 'Tạo Tài Khoản Mới'}
+          {loading ? 'Processing...' : tab === 'login' ? 'Log In' : 'Create Account'}
         </button>
       </form>
     </Modal>

@@ -14,10 +14,10 @@ interface AiAssistantPageProps {
 }
 
 const STARTER_PROMPTS = [
-  "Tôi thuộc nhóm tính cách RIA, tôi nên theo học ngành gì?",
-  "Kỹ năng cần có để trở thành Kỹ sư phần mềm là gì?",
-  "Làm sao để phát triển kỹ năng lãnh đạo trong nhóm Enterprising?",
-  "Khác biệt chính giữa nhóm Realistic (R) và Investigative (I)?",
+  "I have a RIA personality code, what majors should I study?",
+  "What are the required skills to become a Software Engineer?",
+  "How can I develop leadership skills in the Enterprising type?",
+  "What are the key differences between Realistic (R) and Investigative (I)?",
 ];
 
 export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
@@ -31,12 +31,12 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
 
   useEffect(() => {
     // Initial welcome message
-    let welcomeText = `Xin chào ${user?.name || "bạn"}! Tôi là Trợ lý AI Tư vấn Hướng nghiệp RIASEC. Tôi có thể giúp bạn giải đáp thắc mắc về các nhóm tính cách, gợi ý ngành học và định hướng con đường nghề nghiệp phù hợp nhất.`;
+    let welcomeText = `Hello ${user?.name || "there"}! I am your RIASEC AI Career Advisor. I can help answer questions about personality types, recommend fields of study, and guide you toward ideal career pathways.`;
 
     if (initialContext?.jobName) {
-      welcomeText = `Tôi thấy bạn đang quan tâm đến nghề **${initialContext.jobName}** (Nhóm RIASEC: ${initialContext.riasecCode || ""}). Bạn muốn tìm hiểu thêm về lộ trình học, kỹ năng cần trang bị hay cơ hội việc làm của ngành này?`;
+      welcomeText = `I see you are interested in **${initialContext.jobName}** (RIASEC Code: ${initialContext.riasecCode || ""}). Would you like to explore learning roadmaps, required skills, or career opportunities for this role?`;
     } else if (initialContext?.riasecCode) {
-      welcomeText = `Chúc mừng bạn đã hoàn thành bài test RIASEC với mã kết quả **${initialContext.riasecCode}**! Tôi có thể giúp bạn phân tích sâu hơn về các nghề nghiệp lý tưởng cho nhóm tính cách này.`;
+      welcomeText = `Congratulations on completing the RIASEC assessment with result code **${initialContext.riasecCode}**! I can help you analyze matching career paths and strengths for this personality type.`;
     }
 
     setMessages([
@@ -87,7 +87,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         sender: "assistant",
-        text: res.reply || "Xin lỗi, tôi chưa thể xử lý yêu cầu lúc này.",
+        text: res.reply || "Sorry, I am unable to process your request at the moment.",
         timestamp: new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -100,7 +100,6 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
         "Backend AI offline, using smart rule-based guidance fallback:",
         err,
       );
-      // Giúp người dùng luôn nhận được tư vấn hữu ích ngay cả khi chưa config AI API key
       const fallbackReply = generateSmartFallbackReply(text, initialContext);
       setMessages((prev) => [
         ...prev,
@@ -128,16 +127,17 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
       q.includes("ria") ||
       (ctx?.riasecCode && ctx.riasecCode.includes("R"))
     ) {
-      return `Nhóm tính cách **RIA (Realistic - Investigative - Artistic)** là sự kết hợp tuyệt vời giữa tư duy kỹ thuật thực tế, óc phân tích khoa học và khả năng sáng tạo độc đáo!\n\n**Các ngành nghề đề xuất hàng đầu:**\n1. Kỹ sư phần mềm / Trí tuệ nhân tạo (AI Developer)\n2. Kiến trúc sư công trình & quy hoạch đô thị\n3. Kỹ sư cơ điện tử / Robotics\n4. Chuyên viên thiết kế sản phẩm công nghiệp (UI/UX)\n\n**Lời khuyên:** Hãy chú trọng rèn luyện cả tư duy logic toán học lẫn kỹ năng thẩm mỹ thiết kế để tạo nên các sản phẩm công nghệ vừa mạnh mẽ vừa thân thiện với người dùng!`;
+      return `The **RIA (Realistic - Investigative - Artistic)** personality code is a powerful combination of practical engineering aptitude, analytical thinking, and creative problem-solving!\n\n**Top Recommended Career Fields:**\n1. Software Engineer / AI Developer\n2. Architecture & Urban Design\n3. Mechatronics / Robotics Engineer\n4. Digital Product Designer (UI/UX)\n\n**Advice:** Focus on honing both your logical technical foundations and creative design sensibility to build innovative, user-friendly solutions!`;
     }
     if (
-      q.includes("kỹ sư") ||
-      q.includes("công nghệ") ||
-      q.includes("phần mềm")
+      q.includes("engineer") ||
+      q.includes("software") ||
+      q.includes("tech") ||
+      q.includes("kỹ sư")
     ) {
-      return `Để theo đuổi ngành **Công nghệ thông tin / Kỹ sư phần mềm**, bạn cần chuẩn bị:\n- **Kiến thức cốt lõi:** Lập trình (JavaScript/TypeScript, Python, Java), Cấu trúc dữ liệu & Thuật toán, Cơ sở dữ liệu (SQL, NoSQL).\n- **Kỹ năng mềm:** Tư duy giải quyết vấn đề, tự học tài liệu tiếng Anh và làm việc nhóm.\n- **Lộ trình:** Bắt đầu bằng việc thực hiện các dự án thực tế (Fullstack Web/Mobile App) tương tự như hệ thống RIASEC bạn đang trải nghiệm!`;
+      return `To pursue a career in **Software Engineering / Information Technology**, here is what to prepare:\n- **Core Knowledge:** Programming (JavaScript/TypeScript, Python, Java), Data Structures & Algorithms, Databases (SQL, NoSQL).\n- **Soft Skills:** Problem-solving mindset, continuous learning, and teamwork.\n- **Pathway:** Start by building hands-on projects (Fullstack Web/Mobile Apps) similar to this RIASEC platform!`;
     }
-    return `Cảm ơn câu hỏi của bạn! Với định hướng theo mô hình RIASEC, bạn nên cân nhắc sự hài hòa giữa sở thích tự nhiên, năng lực học tập và nhu cầu tuyển dụng của thị trường. Bạn muốn tìm hiểu kỹ hơn về ngành nào?`;
+    return `Thank you for your question! Guided by the RIASEC framework, we recommend balancing your natural interests, learning strengths, and current job market demand. Which field would you like to explore deeper?`;
   }
 
   return (
@@ -182,7 +182,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
               fontFamily: "var(--font-heading)",
             }}
           >
-            Trợ Lý AI Tư Vấn Nghề Nghiệp
+            AI Career Advisor
           </h2>
           <span
             style={{
@@ -202,7 +202,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
                 background: "#10B981",
               }}
             />
-            Sẵn sàng hỗ trợ 24/7
+            Online 24/7
           </span>
         </div>
       </div>
@@ -227,8 +227,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
               gap: 4,
             }}
           >
-            <Sparkles size={12} color="var(--primary-teal)" /> Gợi ý câu hỏi
-            nhanh:
+            <Sparkles size={12} color="var(--primary-teal)" /> Suggested quick questions:
           </span>
           <div
             style={{
@@ -381,7 +380,7 @@ export const AiAssistantPage: React.FC<AiAssistantPageProps> = ({
         <input
           type="text"
           className="chat-input"
-          placeholder="Nhập câu hỏi tư vấn hướng nghiệp..."
+          placeholder="Type your career guidance question..."
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={(e) => {

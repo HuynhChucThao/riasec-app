@@ -63,7 +63,7 @@ export const Modal: React.FC<ModalProps> = ({
           ) : (
             <div />
           )}
-          <button className="btn-icon" onClick={onClose} title="Đóng">
+          <button className="btn-icon" onClick={onClose} title="Close">
             <X size={18} />
           </button>
         </div>

@@ -16,7 +16,7 @@ export const PreTestPage: React.FC<PreTestPageProps> = ({ onStartTest, onBack })
           onClick={onBack}
           style={{ padding: '8px 14px', borderRadius: 20, fontSize: '0.82rem' }}
         >
-          <ArrowLeft size={16} /> Quay lại
+          <ArrowLeft size={16} /> Back
         </button>
       </div>
 
@@ -57,11 +57,11 @@ export const PreTestPage: React.FC<PreTestPageProps> = ({ onStartTest, onBack })
             marginBottom: 8,
           }}
         >
-          Khám Phá Con Đường Sự Nghiệp
+          Discover Your Career Pathway
         </h1>
 
         <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5, maxWidth: 380, margin: '0 auto' }}>
-          Bài kiểm tra RIASEC giúp bạn tìm thấy các ngành nghề phù hợp nhất với sở thích tự nhiên và đặc điểm tính cách của bản thân.
+          The RIASEC assessment helps identify the career fields that best align with your natural interests and unique personality traits.
         </p>
       </div>
 
@@ -93,8 +93,8 @@ export const PreTestPage: React.FC<PreTestPageProps> = ({ onStartTest, onBack })
             <Clock size={20} />
           </div>
           <div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>THỜI GIAN</div>
-            <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>5 - 10 Phút</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>DURATION</div>
+            <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>5 - 10 Minutes</div>
           </div>
         </div>
 
@@ -124,13 +124,13 @@ export const PreTestPage: React.FC<PreTestPageProps> = ({ onStartTest, onBack })
             <HelpCircle size={20} />
           </div>
           <div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>TỔNG CÂU HỎI</div>
-            <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>42 Câu hỏi</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>TOTAL QUESTIONS</div>
+            <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>42 Questions</div>
           </div>
         </div>
       </div>
 
-      {/* Tips Before You Start (Before you start guidelines from Android) */}
+      {/* Tips Before You Start */}
       <div
         style={{
           background: 'white',
@@ -148,28 +148,28 @@ export const PreTestPage: React.FC<PreTestPageProps> = ({ onStartTest, onBack })
             color: 'var(--text-primary)',
           }}
         >
-          Lưu ý trước khi bắt đầu (Before You Start)
+          Before You Start
         </h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
             <CheckCircle size={18} color="var(--primary-teal)" style={{ flexShrink: 0, marginTop: 2 }} />
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-              <strong>Không có câu trả lời đúng hay sai:</strong> Mọi câu trả lời đều phản ánh sở thích trung thực của bạn.
+              <strong>No right or wrong answers:</strong> Every response reflects your genuine individual preferences.
             </p>
           </div>
 
           <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
             <CheckCircle size={18} color="var(--primary-teal)" style={{ flexShrink: 0, marginTop: 2 }} />
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-              <strong>Trả lời thật lòng:</strong> Hãy chọn mức độ bạn thực sự thích hoặc thấy đúng với bản thân ở thời điểm hiện tại.
+              <strong>Answer honestly:</strong> Choose the level that truly matches how you feel at this point in time.
             </p>
           </div>
 
           <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
             <CheckCircle size={18} color="var(--primary-teal)" style={{ flexShrink: 0, marginTop: 2 }} />
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-              <strong>Đừng suy nghĩ quá lâu:</strong> Trực giác và phản xạ đầu tiên thường phản ánh chính xác nhất sở thích của bạn.
+              <strong>Go with your first instinct:</strong> Your spontaneous reaction is usually the most accurate indicator.
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ export const PreTestPage: React.FC<PreTestPageProps> = ({ onStartTest, onBack })
 
       {/* Start Button */}
       <button className="btn-primary" onClick={onStartTest} style={{ padding: '16px' }}>
-        <span>Tôi Đã Sẵn Sàng - Bắt Đầu Làm Bài</span>
+        <span>I'm Ready - Start Assessment</span>
       </button>
     </div>
   );

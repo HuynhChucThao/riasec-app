@@ -16,7 +16,6 @@ import {
 import { adminApi, occupationApi } from "../api/client";
 import { ColumnsType } from "antd/es/table";
 import { BaseTable } from "../components/common/BaseTable/BaseTable";
-import form from "antd/es/form";
 import { Select } from "antd";
 
 type TabKey = "overview" | "questions" | "occupations" | "users" | "feedback";
@@ -34,10 +33,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     >
       <header style={headerStyle}>
         <h1 style={{ fontSize: "1.1rem", fontWeight: 800 }}>
-          Bảng Quản Trị RIASEC
+          RIASEC Admin Dashboard
         </h1>
         <button onClick={onLogout} style={logoutBtnStyle}>
-          <LogOut size={16} /> Đăng xuất
+          <LogOut size={16} /> Log Out
         </button>
       </header>
 
@@ -51,25 +50,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
       >
         <TabButton
           icon={<LayoutDashboard size={16} />}
-          label="Tổng quan"
+          label="Overview"
           active={tab === "overview"}
           onClick={() => setTab("overview")}
         />
         <TabButton
           icon={<FileQuestion size={16} />}
-          label="Câu hỏi"
+          label="Questions"
           active={tab === "questions"}
           onClick={() => setTab("questions")}
         />
         <TabButton
           icon={<Briefcase size={16} />}
-          label="Nghề nghiệp"
+          label="Occupations"
           active={tab === "occupations"}
           onClick={() => setTab("occupations")}
         />
         <TabButton
           icon={<UsersIcon size={16} />}
-          label="Người dùng"
+          label="Users"
           active={tab === "users"}
           onClick={() => setTab("users")}
         />
@@ -236,34 +235,34 @@ function OverviewAdmin() {
     adminApi
       .getDashboardStats()
       .then(setStats)
-      .catch((err: any) => console.error("Lỗi tải thống kê:", err))
+      .catch((err: any) => console.error("Error loading stats:", err))
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p>Đang tải...</p>;
-  if (!stats) return <p>Không tải được dữ liệu thống kê.</p>;
+  if (loading) return <p>Loading...</p>;
+  if (!stats) return <p>Could not load dashboard statistics.</p>;
 
   const maxDist = Math.max(1, ...Object.values(stats.riasecDistribution));
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-        <StatCard label="Tổng người dùng" value={stats.overview.totalUsers} />
+        <StatCard label="Total Users" value={stats.overview.totalUsers} />
         <StatCard
-          label="Học sinh/Sinh viên"
+          label="Students"
           value={stats.overview.totalStudents}
         />
-        <StatCard label="Lượt làm test" value={stats.overview.totalTests} />
-        <StatCard label="Nghề nghiệp" value={stats.overview.totalOccupations} />
+        <StatCard label="Assessments Taken" value={stats.overview.totalTests} />
+        <StatCard label="Occupations" value={stats.overview.totalOccupations} />
         <StatCard
-          label="Đánh giá TB"
+          label="Average Rating"
           value={`⭐ ${stats.overview.averageRating}`}
         />
       </div>
 
       <div style={cardStyle}>
         <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 14 }}>
-          Phân bố nhóm RIASEC
+          RIASEC Type Distribution
         </h3>
         <div
           style={{
@@ -306,7 +305,7 @@ function OverviewAdmin() {
 
       <div style={cardStyle}>
         <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 14 }}>
-          5 lượt test gần nhất
+          5 Most Recent Assessments
         </h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {stats.recentTests.map((t) => (
@@ -321,11 +320,11 @@ function OverviewAdmin() {
               }}
             >
               <span>
-                {t.user?.name || t.user?.email || "Người dùng ẩn danh"}
+                {t.user?.name || t.user?.email || "Anonymous User"}
               </span>
               <span style={{ fontWeight: 700 }}>{t.resultCode}</span>
               <span style={{ color: "#6B7280" }}>
-                {new Date(t.testedAt).toLocaleDateString("vi-VN")}
+                {new Date(t.testedAt).toLocaleDateString("en-US")}
               </span>
             </div>
           ))}
@@ -357,7 +356,7 @@ function QuestionsAdmin() {
       const data = await adminApi.getQuestions();
       setItems(data as QuestionItem[]);
     } catch (err) {
-      console.error("Lỗi tải câu hỏi:", err);
+      console.error("Error loading questions:", err);
     } finally {
       setLoading(false);
     }
@@ -385,7 +384,7 @@ function QuestionsAdmin() {
       setNewContent("");
       load();
     } catch (err) {
-      console.error("Lỗi thêm câu hỏi:", err);
+      console.error("Error creating question:", err);
     }
   };
 
@@ -404,22 +403,22 @@ function QuestionsAdmin() {
       setEditingId(null);
       load();
     } catch (err) {
-      console.error("Lỗi cập nhật câu hỏi:", err);
+      console.error("Error updating question:", err);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Xóa câu hỏi này?")) return;
+    if (!confirm("Delete this question?")) return;
     try {
       await adminApi.deleteQuestion(id);
       load();
     } catch (err) {
-      console.error("Lỗi xóa câu hỏi:", err);
+      console.error("Error deleting question:", err);
     }
   };
   const columns: ColumnsType<QuestionItem> = [
     {
-      title: "STT",
+      title: "No.",
       dataIndex: "index",
       key: "index",
       width: 50,
@@ -427,7 +426,7 @@ function QuestionsAdmin() {
       render: (_, __, index) => index + 1,
     },
     {
-      title: "Thao tác",
+      title: "Actions",
       key: "actions",
       width: 100,
       align: "center",
@@ -465,7 +464,7 @@ function QuestionsAdmin() {
         ),
     },
     {
-      title: "Nội dung",
+      title: "Content",
       dataIndex: "content",
       align: "left",
       key: "content",
@@ -481,7 +480,7 @@ function QuestionsAdmin() {
         ),
     },
     {
-      title: "Nhóm",
+      title: "Type",
       dataIndex: "type",
       key: "type",
       width: 90,
@@ -509,7 +508,7 @@ function QuestionsAdmin() {
         <SearchBox
           value={search}
           onChange={setSearch}
-          placeholder="Tìm câu hỏi theo nội dung..."
+          placeholder="Search questions by content..."
         />
       </div>
 
@@ -517,7 +516,7 @@ function QuestionsAdmin() {
         <input
           value={newContent}
           onChange={(e) => setNewContent(e.target.value)}
-          placeholder="Nội dung câu hỏi mới..."
+          placeholder="New question content..."
           style={{ ...inputStyle, flex: 1 }}
         />
         <select
@@ -541,12 +540,12 @@ function QuestionsAdmin() {
             padding: "10px 16px",
           }}
         >
-          <Plus size={16} /> Thêm
+          <Plus size={16} /> Add
         </button>
       </div>
 
       {loading ? (
-        <p>Đang tải...</p>
+        <p>Loading...</p>
       ) : (
         <BaseTable
           rowKey="id"
@@ -554,7 +553,7 @@ function QuestionsAdmin() {
           dataSource={filtered}
           loading={loading}
           pagination={{ pageSize: 10 }}
-          locale={{ emptyText: "Không tìm thấy câu hỏi nào." }}
+          locale={{ emptyText: "No questions found." }}
         />
       )}
     </div>
@@ -589,7 +588,7 @@ function OccupationsAdmin() {
       const res = await occupationApi.getAll({ keyword, limit: 100 });
       setItems((res.items || res.data || []) as OccupationItem[]);
     } catch (err) {
-      console.error("Lỗi tải nghề nghiệp:", err);
+      console.error("Error loading occupations:", err);
     } finally {
       setLoading(false);
     }
@@ -623,7 +622,7 @@ function OccupationsAdmin() {
       setShowAddForm(false);
       load();
     } catch (err) {
-      console.error("Lỗi thêm nghề nghiệp:", err);
+      console.error("Error creating occupation:", err);
     }
   };
 
@@ -638,22 +637,22 @@ function OccupationsAdmin() {
       setEditingId(null);
       load(search.trim() || undefined);
     } catch (err) {
-      console.error("Lỗi cập nhật nghề nghiệp:", err);
+      console.error("Error updating occupation:", err);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Xóa nghề nghiệp này?")) return;
+    if (!confirm("Delete this occupation?")) return;
     try {
       await adminApi.deleteOccupation(id);
       load(search.trim() || undefined);
     } catch (err) {
-      console.error("Lỗi xóa nghề nghiệp:", err);
+      console.error("Error deleting occupation:", err);
     }
   };
   const columnsOccupation: ColumnsType<OccupationItem> = [
     {
-      title: "STT",
+      title: "No.",
       dataIndex: "index",
       key: "index",
       width: 50,
@@ -661,7 +660,7 @@ function OccupationsAdmin() {
       render: (_, __, index) => index + 1,
     },
     {
-      title: "Thao tác",
+      title: "Actions",
       key: "actions",
       width: 100,
       align: "center",
@@ -699,7 +698,7 @@ function OccupationsAdmin() {
         ),
     },
     {
-      title: "Tên nghề",
+      title: "Career Name",
       dataIndex: "jobName",
       key: "jobName",
       render: (_, record) =>
@@ -716,7 +715,7 @@ function OccupationsAdmin() {
         ),
     },
     {
-      title: "Nhóm",
+      title: "Group",
       dataIndex: "mainCode",
       key: "mainCode",
       width: 70,
@@ -740,7 +739,7 @@ function OccupationsAdmin() {
         ),
     },
     {
-      title: "Mã RIASEC",
+      title: "RIASEC Code",
       dataIndex: "riasecCode",
       key: "riasecCode",
       render: (_, record) =>
@@ -755,7 +754,7 @@ function OccupationsAdmin() {
         ),
     },
     {
-      title: "Mô tả",
+      title: "Description",
       dataIndex: "description",
       key: "description",
       render: (_, record) =>
@@ -779,7 +778,7 @@ function OccupationsAdmin() {
         <SearchBox
           value={search}
           onChange={setSearch}
-          placeholder="Tìm nghề nghiệp theo tên..."
+          placeholder="Search occupations by name..."
         />
         <button
           type="button"
@@ -792,7 +791,7 @@ function OccupationsAdmin() {
             padding: "10px 16px",
           }}
         >
-          <Plus size={16} /> Thêm nghề
+          <Plus size={16} /> Add Occupation
         </button>
       </form>
 
@@ -807,7 +806,7 @@ function OccupationsAdmin() {
           }}
         >
           <input
-            placeholder="Tên nghề"
+            placeholder="Career Name"
             value={form.jobName}
             onChange={(e) => setForm({ ...form, jobName: e.target.value })}
             style={{ ...inputStyle, flex: 2, minWidth: 180 }}
@@ -824,13 +823,13 @@ function OccupationsAdmin() {
             ))}
           </select>
           <input
-            placeholder="Mã RIASEC đầy đủ (vd: RIA)"
+            placeholder="Full RIASEC Code (e.g. RIA)"
             value={form.riasecCode}
             onChange={(e) => setForm({ ...form, riasecCode: e.target.value })}
             style={{ ...inputStyle, flex: 1, minWidth: 140 }}
           />
           <input
-            placeholder="Mô tả ngắn"
+            placeholder="Short Description"
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             style={{ ...inputStyle, flex: 3, minWidth: 200 }}
@@ -840,13 +839,13 @@ function OccupationsAdmin() {
             className="btn-primary"
             style={{ padding: "10px 16px" }}
           >
-            Lưu
+            Save
           </button>
         </div>
       )}
 
       {loading ? (
-        <p>Đang tải...</p>
+        <p>Loading...</p>
       ) : (
         <BaseTable
           rowKey="id"
@@ -854,7 +853,7 @@ function OccupationsAdmin() {
           dataSource={filtered}
           loading={loading}
           pagination={{ pageSize: 10 }}
-          locale={{ emptyText: "Không tìm thấy nghề nghiệp nào." }}
+          locale={{ emptyText: "No occupations found." }}
         />
       )}
     </div>
@@ -880,7 +879,7 @@ function UsersAdmin() {
       const data = await adminApi.getUsers();
       setItems(data);
     } catch (err) {
-      console.error("Lỗi tải danh sách người dùng:", err);
+      console.error("Error loading users:", err);
     } finally {
       setLoading(false);
     }
@@ -905,29 +904,29 @@ function UsersAdmin() {
       await adminApi.updateUserRole(id, role);
       load();
     } catch (err) {
-      console.error("Lỗi đổi quyền người dùng:", err);
+      console.error("Error updating user role:", err);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Xóa người dùng này?")) return;
+    if (!confirm("Delete this user?")) return;
     try {
       await adminApi.deleteUser(id);
       load();
     } catch (err) {
-      console.error("Lỗi xóa người dùng:", err);
+      console.error("Error deleting user:", err);
     }
   };
 
   const columnsUser: ColumnsType<UserItem> = [
     {
-      title: "STT",
+      title: "No.",
       key: "index",
       width: 50,
       render: (_, __, index) => index + 1,
     },
     {
-      title: "Thao tác",
+      title: "Actions",
       key: "action",
       width: 100,
       render: (_, record) => (
@@ -942,7 +941,7 @@ function UsersAdmin() {
       ),
     },
     {
-      title: "Tên",
+      title: "Name",
       dataIndex: "name",
       key: "name",
       render: (name) => name || "—",
@@ -953,7 +952,7 @@ function UsersAdmin() {
       key: "email",
     },
     {
-      title: "Quyền",
+      title: "Role",
       dataIndex: "role",
       key: "role",
       width: 140,
@@ -976,7 +975,7 @@ function UsersAdmin() {
         <SearchBox
           value={search}
           onChange={setSearch}
-          placeholder="Tìm theo tên hoặc email..."
+          placeholder="Search by name or email..."
         />
       </div>
 
@@ -986,7 +985,7 @@ function UsersAdmin() {
         dataSource={filtered}
         loading={loading}
         pagination={{ pageSize: 10 }}
-        locale={{ emptyText: "Không tìm thấy người dùng nào." }}
+        locale={{ emptyText: "No users found." }}
       />
     </div>
   );
@@ -1006,12 +1005,12 @@ function FeedbackAdmin() {
     adminApi
       .getFeedback()
       .then((data: FeedbackItem[]) => setItems(data))
-      .catch((err: any) => console.error("Lỗi tải feedback:", err))
+      .catch((err: any) => console.error("Error loading feedback:", err))
       .finally(() => setLoading(false));
   }, []);
 
   const distribution = useMemo(() => {
-    const counts = [0, 0, 0, 0, 0]; // index 0 = 1 sao ... index 4 = 5 sao
+    const counts = [0, 0, 0, 0, 0];
     items.forEach((f) => {
       const r = Math.round(f.rating);
       if (r >= 1 && r <= 5) counts[r - 1]++;
@@ -1021,13 +1020,13 @@ function FeedbackAdmin() {
 
   const maxCount = Math.max(1, ...distribution);
 
-  if (loading) return <p>Đang tải...</p>;
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div style={cardStyle}>
         <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 14 }}>
-          Phân bố đánh giá sao ({items.length} lượt)
+          Star Rating Distribution ({items.length} reviews)
         </h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {[5, 4, 3, 2, 1].map((star) => {

@@ -51,7 +51,7 @@ export const CareerCard: React.FC<CareerCardProps> = ({
               background: isSaved ? '#FFF1F2' : 'var(--bg-subtle)',
             }}
             onClick={(e) => onToggleSave(occupation, e)}
-            title={isSaved ? 'Đã lưu' : 'Lưu nghề nghiệp'}
+            title={isSaved ? 'Saved' : 'Save career'}
           >
             <Bookmark size={17} fill={isSaved ? '#E11D48' : 'none'} />
           </button>
@@ -87,9 +87,9 @@ export const CareerCard: React.FC<CareerCardProps> = ({
         }}
       >
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-          <Eye size={13} /> {occupation.viewCount || 0} lượt xem
+          <Eye size={13} /> {occupation.viewCount || 0} views
         </span>
-        <span style={{ color: 'var(--primary-teal)', fontWeight: 600 }}>Xem chi tiết &rarr;</span>
+        <span style={{ color: 'var(--primary-teal)', fontWeight: 600 }}>View details &rarr;</span>
       </div>
     </div>
   );

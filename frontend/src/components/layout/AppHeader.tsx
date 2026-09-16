@@ -27,7 +27,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSelectTab }) 
           <div className="header-logo-badge">AiRa</div>
           <div className="header-title-group">
             <h1>RIASEC Career AI</h1>
-            <span>Nền Tảng Hướng Nghiệp & Tư Vấn Thông Minh</span>
+            <span>Smart Career Guidance & Assessment Platform</span>
           </div>
         </div>
 
@@ -38,7 +38,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSelectTab }) 
             onClick={() => onSelectTab('home')}
           >
             <Home size={18} />
-            <span>Trang Chủ</span>
+            <span>Home</span>
           </button>
 
           <button
@@ -46,7 +46,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSelectTab }) 
             onClick={() => onSelectTab('explore')}
           >
             <Compass size={18} />
-            <span>Khám Phá Nghề</span>
+            <span>Explore Careers</span>
           </button>
 
           <button
@@ -54,7 +54,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSelectTab }) 
             onClick={() => onSelectTab('pre-test')}
           >
             <FileQuestion size={18} />
-            <span>Trắc Nghiệm RIASEC</span>
+            <span>RIASEC Assessment</span>
           </button>
 
           <button
@@ -62,7 +62,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSelectTab }) 
             onClick={() => onSelectTab('ai')}
           >
             <Bot size={18} />
-            <span>Trợ Lý AI</span>
+            <span>AI Advisor</span>
             <Sparkles size={14} />
           </button>
 
@@ -71,7 +71,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSelectTab }) 
             onClick={() => onSelectTab('history')}
           >
             <History size={18} />
-            <span>Lịch Sử</span>
+            <span>History</span>
           </button>
         </nav>
 
@@ -113,7 +113,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSelectTab }) 
               onClick={openAuthModal}
             >
               <LogIn size={16} />
-              <span>Đăng Nhập / Đăng Ký</span>
+              <span>Log In / Register</span>
             </button>
           )}
         </div>

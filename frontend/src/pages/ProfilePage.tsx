@@ -48,7 +48,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
           const list = await savedJobsApi.getSaved();
           setSavedJobs(list.map((l)=> l.occupation) || []);
         } catch (err) {
-          console.error('Lỗi tải nghề đã lưu:', err);
+          console.error('Error loading saved careers:', err);
         } finally {
           setLoadingJobs(false);
         }
@@ -65,7 +65,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
       await refreshUser();
       setIsEditingDream(false);
     } catch (err) {
-      console.error('Lỗi cập nhật nghề mơ ước:', err);
+      console.error('Error updating dream career:', err);
     } finally {
       setSavingDream(false);
     }
@@ -84,7 +84,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
         setFeedbackContent('');
       }, 1500);
     } catch (err) {
-      console.error('Lỗi gửi phản hồi:', err);
+      console.error('Error sending feedback:', err);
     } finally {
       setSubmittingFeedback(false);
     }
@@ -96,7 +96,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
       await savedJobsApi.toggleSave(occ.id);
       setSavedJobs((prev) => prev.filter((j) => j.id !== occ.id));
     } catch (err) {
-      console.error('Lỗi bỏ lưu nghề:', err);
+      console.error('Error removing saved career:', err);
     }
   };
 
@@ -128,10 +128,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
           <UserIcon size={26} />
         </div>
         <h3 style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-          Hồ Sơ Của Bạn
+          Your Profile
         </h3>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: 320, margin: '8px auto 20px' }}>
-          Đăng nhập để xem thông tin cá nhân, cập nhật nghề mơ ước và quản lý danh sách nghề nghiệp đã lưu.
+          Sign in to view your profile, update your dream career, and manage your saved career bookmarks.
         </p>
         <button
           className="btn-primary"
@@ -139,7 +139,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
           onClick={openAuthModal}
         >
           <LogIn size={16} />
-          <span>Đăng Nhập Hoặc Đăng Ký</span>
+          <span>Sign In or Register</span>
         </button>
       </div>
     );
@@ -147,7 +147,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* 1. Profile Overview Card (fragment_account.xml) */}
+      {/* 1. Profile Overview Card */}
       <div
         style={{
           background: 'white',
@@ -183,7 +183,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <h2 style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-              {user.name || 'Học viên RIASEC'}
+              {user.name || 'RIASEC Learner'}
             </h2>
             {user.role === 'ADMIN' && (
               <span
@@ -221,14 +221,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
           <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Sparkles size={14} color="var(--primary-teal)" /> Nghề nghiệp mơ ước của bạn:
+            <Sparkles size={14} color="var(--primary-teal)" /> Your Dream Career:
           </span>
           {!isEditingDream && (
             <button
               onClick={() => setIsEditingDream(true)}
               style={{ fontSize: '0.78rem', color: 'var(--primary-teal)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}
             >
-              <Edit2 size={12} /> Chỉnh sửa
+              <Edit2 size={12} /> Edit
             </button>
           )}
         </div>
@@ -240,7 +240,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
               className="search-input"
               value={dreamInput}
               onChange={(e) => setDreamInput(e.target.value)}
-              placeholder="VD: Kỹ sư phần mềm, Bác sĩ..."
+              placeholder="e.g. Software Engineer, Doctor..."
               style={{ border: '1px solid var(--primary-teal)', borderRadius: 10, padding: '8px 12px' }}
             />
             <button
@@ -249,27 +249,27 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
               onClick={handleSaveDreamWork}
               disabled={savingDream}
             >
-              <Check size={14} /> Lưu
+              <Check size={14} /> Save
             </button>
           </div>
         ) : (
           <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-            {user.dreamWork || 'Chưa cập nhật'}
+            {user.dreamWork || 'Not set yet'}
           </div>
         )}
       </div>
 
-      {/* 3. Saved Occupations (fragment_saved_job.xml) */}
+      {/* 3. Saved Occupations */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
           <h3 style={{ fontSize: '1.05rem', fontWeight: 700, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Bookmark size={18} color="var(--primary-teal)" /> Nghề Nghiệp Đã Lưu ({savedJobs.length})
+            <Bookmark size={18} color="var(--primary-teal)" /> Saved Careers ({savedJobs.length})
           </h3>
         </div>
 
         {loadingJobs ? (
           <div style={{ textAlign: 'center', padding: '20px 0', color: 'var(--text-muted)' }}>
-            Đang tải danh sách nghề đã lưu...
+            Loading saved careers...
           </div>
         ) : savedJobs.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -295,13 +295,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
           >
             <Bookmark size={28} color="var(--text-muted)" style={{ margin: '0 auto 8px' }} />
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              Bạn chưa lưu nghề nghiệp nào. Hãy khám phá và nhấn biểu tượng Bookmark để lưu lại những nghề bạn quan tâm!
+              You haven't saved any careers yet. Explore careers and click the Bookmark icon to save those you like!
             </p>
           </div>
         )}
       </div>
 
-      {/* 4. Feedback & Support Dialog Trigger (dialog_feedback.xml) */}
+      {/* 4. Feedback & Support Dialog Trigger */}
       <div
         style={{
           background: 'white',
@@ -331,9 +331,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
             <MessageSquare size={18} />
           </div>
           <div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>Gửi Ý Kiến Đóng Góp (Feedback)</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>Send Feedback</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-              Giúp chúng tôi nâng cấp trải nghiệm định hướng nghề nghiệp
+              Help us improve the career guidance experience
             </div>
           </div>
         </div>
@@ -352,28 +352,28 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
           fontWeight: 700,
         }}
       >
-        <LogOut size={16} /> Đăng Xuất (LOG OUT)
+        <LogOut size={16} /> Log Out
       </button>
 
-      {/* Feedback Modal (dialog_feedback.xml) */}
+      {/* Feedback Modal */}
       <Modal
         isOpen={showFeedbackModal}
         onClose={() => setShowFeedbackModal(false)}
-        title="Đóng Góp Ý Kiến"
+        title="Send Feedback"
       >
         {feedbackSuccess ? (
           <div style={{ textAlign: 'center', padding: '24px 0', color: '#059669' }}>
             <Heart size={40} style={{ margin: '0 auto 10px' }} />
-            <h4 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Cảm ơn bạn đã gửi đóng góp!</h4>
+            <h4 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Thank you for your feedback!</h4>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 4 }}>
-              Ý kiến của bạn giúp hệ thống ngày một hoàn thiện hơn.
+              Your thoughts help us continuously enhance the platform.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSendFeedback} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div>
               <label style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 8 }}>
-                Mức độ hài lòng:
+                Satisfaction Rating:
               </label>
               <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -391,7 +391,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
 
             <div>
               <label style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>
-                Nội dung góp ý:
+                Your Feedback:
               </label>
               <textarea
                 rows={4}
@@ -403,7 +403,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
                   padding: 12,
                   resize: 'none',
                 }}
-                placeholder="Chia sẻ trải nghiệm hoặc đề xuất cải thiện ứng dụng..."
+                placeholder="Share your thoughts or suggest improvements..."
                 value={feedbackContent}
                 onChange={(e) => setFeedbackContent(e.target.value)}
                 required
@@ -415,7 +415,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
               className="btn-primary"
               disabled={submittingFeedback || !feedbackContent.trim()}
             >
-              {submittingFeedback ? 'Đang gửi...' : 'Gửi Ý Kiến'}
+              {submittingFeedback ? 'Sending...' : 'Submit Feedback'}
             </button>
           </form>
         )}

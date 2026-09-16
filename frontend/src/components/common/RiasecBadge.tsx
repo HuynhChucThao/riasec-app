@@ -21,10 +21,10 @@ export const RiasecBadge: React.FC<RiasecBadgeProps> = ({ code, size = 'sm', sho
   return (
     <span
       className={`riasec-badge badge-${mainLetter.toLowerCase()} ${sizeClasses[size]}`}
-      title={`${info.nameEn} (${info.nameVi})`}
+      title={`${info.nameEn}`}
     >
       {code}
-      {showFullName && <span style={{ marginLeft: 4, fontWeight: 500 }}>• {info.nameVi}</span>}
+      {showFullName && <span style={{ marginLeft: 4, fontWeight: 500 }}>• {info.nameEn}</span>}
     </span>
   );
 };

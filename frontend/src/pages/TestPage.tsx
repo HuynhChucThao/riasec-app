@@ -279,27 +279,27 @@ interface TestPageProps {
 const LIKERT_OPTIONS = [
   {
     value: 1,
-    label: "Hoàn toàn không thích",
-    shortLabel: "Rất ghét",
+    label: "Strongly Disagree",
+    shortLabel: "Strongly Disagree",
     color: "#EF4444",
   },
   {
     value: 2,
-    label: "Không thích",
-    shortLabel: "Không thích",
+    label: "Disagree",
+    shortLabel: "Disagree",
     color: "#F97316",
   },
   {
     value: 3,
-    label: "Bình thường / Phân vân",
-    shortLabel: "Bình thường",
+    label: "Neutral / Unsure",
+    shortLabel: "Neutral",
     color: "#EAB308",
   },
-  { value: 4, label: "Thích", shortLabel: "Thích", color: "#10B981" },
+  { value: 4, label: "Agree", shortLabel: "Agree", color: "#10B981" },
   {
     value: 5,
-    label: "Rất thích / Rất đúng",
-    shortLabel: "Rất thích",
+    label: "Strongly Agree",
+    shortLabel: "Strongly Agree",
     color: "#059669",
   },
 ];
@@ -345,7 +345,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
           color: "var(--text-secondary)",
         }}
       >
-        <div>Đang tải câu hỏi...</div>
+        <div>Loading questions...</div>
       </div>
     );
   }
@@ -368,13 +368,11 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
-    // Chuyển answers (object: index -> score) thành mảng đúng format backend cần
     const formattedAnswers = questions.map((q, idx) => ({
-      questionId: q.id, // lấy đúng id thật của câu hỏi, không phải index
-      score: answers[idx] || 3, // mặc định 3 nếu bỏ qua chưa chọn
+      questionId: q.id,
+      score: answers[idx] || 3,
     }));
 
-    // Vẫn tính scores + top3Code ở local để dùng cho fallback offline (giữ nguyên phần này)
     const scores: Record<RiasecKey, number> = {
       R: 0,
       I: 0,
@@ -394,7 +392,6 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
     const top3Code = sortedTraits.slice(0, 3).join("");
 
     try {
-      // CHỈ gửi "answers" đúng format, KHÔNG gửi "scores" nữa
       const backendResult = await assessmentApi
         .submitTest({ answers: formattedAnswers })
         .catch(() => null);
@@ -410,7 +407,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
         });
       }
     } catch (err) {
-      console.error("Lỗi nộp bài kiểm tra:", err);
+      console.error("Error submitting assessment:", err);
       onFinishTest({
         resultCode: top3Code,
         scores,
@@ -435,7 +432,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
         <button
           className="btn-icon"
           onClick={() => setShowExitModal(true)}
-          title="Thoát bài test"
+          title="Exit assessment"
         >
           <X size={18} />
         </button>
@@ -448,10 +445,10 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
               fontFamily: "var(--font-heading)",
             }}
           >
-            Câu {currentIndex + 1} / {totalQuestions}
+            Question {currentIndex + 1} / {totalQuestions}
           </div>
           <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-            Đã hoàn thành {Object.keys(answers).length}/{totalQuestions} câu
+            Completed {Object.keys(answers).length}/{totalQuestions} questions
           </div>
         </div>
 
@@ -486,7 +483,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
           style={{ flexShrink: 0 }}
         />
         <span>
-          Đọc câu mô tả và chọn mức độ phù hợp nhất với cảm xúc của bạn:
+          Read each statement and select how well it describes your preference:
         </span>
       </div>
 
@@ -585,7 +582,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
           disabled={currentIndex === 0}
           style={{ flex: 1, opacity: currentIndex === 0 ? 0.5 : 1 }}
         >
-          <ArrowLeft size={16} /> Quay lại
+          <ArrowLeft size={16} /> Back
         </button>
 
         {currentIndex === totalQuestions - 1 ? (
@@ -595,7 +592,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
             disabled={isSubmitting}
             style={{ flex: 2 }}
           >
-            <span>{isSubmitting ? "Đang phân tích..." : "Xem Kết Quả"}</span>
+            <span>{isSubmitting ? "Analyzing..." : "View Results"}</span>
             <CheckCircle2 size={18} />
           </button>
         ) : (
@@ -604,7 +601,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
             onClick={handleNext}
             style={{ flex: 2 }}
           >
-            <span>Tiếp theo</span>
+            <span>Next</span>
             <ArrowRight size={16} />
           </button>
         )}
@@ -656,7 +653,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
       <Modal
         isOpen={showExitModal}
         onClose={() => setShowExitModal(false)}
-        title="Dừng bài kiểm tra?"
+        title="Quit Assessment?"
       >
         <p
           style={{
@@ -666,8 +663,7 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
             marginBottom: 20,
           }}
         >
-          Tiến trình làm bài hiện tại của bạn sẽ bị mất nếu bạn thoát bây giờ.
-          Bạn có chắc chắn muốn thoát không?
+          Your current progress will be lost if you leave now. Are you sure you want to exit?
         </p>
 
         <div style={{ display: "flex", gap: 10 }}>
@@ -676,14 +672,14 @@ export const TestPage: React.FC<TestPageProps> = ({ onBack, onFinishTest }) => {
             style={{ flex: 1 }}
             onClick={() => setShowExitModal(false)}
           >
-            Tiếp tục làm bài
+            Continue Test
           </button>
           <button
             className="btn-primary"
             style={{ flex: 1, background: "#EF4444" }}
             onClick={onBack}
           >
-            Đồng ý thoát
+            Confirm Exit
           </button>
         </div>
       </Modal>

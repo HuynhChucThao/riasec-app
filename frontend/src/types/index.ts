@@ -14,56 +14,56 @@ export const RIASEC_MAP: Record<RiasecKey, RiasecInfo> = {
   R: {
     code: 'R',
     nameEn: 'Realistic',
-    nameVi: 'Thực tế / Kỹ thuật',
+    nameVi: 'Realistic / Technical',
     color: '#E05345',
     bgColor: '#FFEBEE',
-    descriptionVi: 'Thích làm việc với máy móc, công cụ, vật liệu thực tế, hoạt động thể chất ngoài trời.',
-    traits: ['Thực tế', 'Tháo vát', 'Khéo léo', 'Cơ khí', 'Kiên trì']
+    descriptionVi: 'Prefers working with machines, tools, practical materials, and outdoor physical activities.',
+    traits: ['Practical', 'Resourceful', 'Skilled', 'Mechanical', 'Persistent']
   },
   I: {
     code: 'I',
     nameEn: 'Investigative',
-    nameVi: 'Nghiên cứu / Khám phá',
+    nameVi: 'Investigative / Research',
     color: '#2563EB',
     bgColor: '#EFF6FF',
-    descriptionVi: 'Thích tìm hiểu, nghiên cứu khoa học, giải quyết vấn đề bằng tư duy logic và trừu tượng.',
-    traits: ['Tư duy', 'Logic', 'Phân tích', 'Tò mò', 'Độc lập']
+    descriptionVi: 'Enjoys scientific research, discovering principles, and solving problems using logical and abstract thinking.',
+    traits: ['Analytical', 'Logical', 'Intellectual', 'Curious', 'Independent']
   },
   A: {
     code: 'A',
     nameEn: 'Artistic',
-    nameVi: 'Nghệ thuật / Sáng tạo',
+    nameVi: 'Artistic / Creative',
     color: '#7C3AED',
     bgColor: '#F5F3FF',
-    descriptionVi: 'Thích sáng tạo, giàu trí tưởng tượng, cảm nhận cái đẹp và thể hiện bản thân tự do.',
-    traits: ['Sáng tạo', 'Trực giác', 'Cảm xúc', 'Độc đáo', 'Tự do']
+    descriptionVi: 'Loves creative expressions, imaginative concepts, aesthetics, and expressing individuality freely.',
+    traits: ['Creative', 'Intuitive', 'Expressive', 'Original', 'Free-spirited']
   },
   S: {
     code: 'S',
     nameEn: 'Social',
-    nameVi: 'Xã hội / Giúp đỡ',
+    nameVi: 'Social / Helping',
     color: '#059669',
     bgColor: '#ECFDF5',
-    descriptionVi: 'Thích giao tiếp, giúp đỡ, đào tạo, chữa lành và chăm sóc cho cộng đồng.',
-    traits: ['Hòa đồng', 'Đồng cảm', 'Hợp tác', 'Thấu hiểu', 'Nhiệt huyết']
+    descriptionVi: 'Enjoys communicating, helping, teaching, mentoring, healing, and serving the community.',
+    traits: ['Sociable', 'Empathetic', 'Cooperative', 'Supportive', 'Passionate']
   },
   E: {
     code: 'E',
     nameEn: 'Enterprising',
-    nameVi: 'Quản lý / Khởi nghiệp',
+    nameVi: 'Enterprising / Leadership',
     color: '#D97706',
     bgColor: '#FFFBEB',
-    descriptionVi: 'Thích lãnh đạo, đàm phán, thuyết phục người khác để đạt được mục tiêu kinh doanh.',
-    traits: ['Quyết đoán', 'Tự tin', 'Thuyết phục', 'Lãnh đạo', 'Mục tiêu']
+    descriptionVi: 'Enjoys leadership, entrepreneurship, negotiating, and persuading others to achieve organizational goals.',
+    traits: ['Decisive', 'Confident', 'Persuasive', 'Leadership', 'Goal-oriented']
   },
   C: {
     code: 'C',
     nameEn: 'Conventional',
-    nameVi: 'Nghiệp vụ / Quy chuẩn',
+    nameVi: 'Conventional / Structured',
     color: '#475569',
     bgColor: '#F1F5F9',
-    descriptionVi: 'Thích làm việc với dữ liệu, con số, hồ sơ tài liệu theo quy trình rõ ràng, ngăn nắp.',
-    traits: ['Ngăn nắp', 'Chi tiết', 'Chính xác', 'Kỷ luật', 'Đáng tin cậy']
+    descriptionVi: 'Prefers working with data, numbers, detailed procedures, records, and structured workflows.',
+    traits: ['Organized', 'Detail-oriented', 'Accurate', 'Disciplined', 'Reliable']
   },
 };
 

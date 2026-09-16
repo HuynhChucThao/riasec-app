@@ -50,16 +50,15 @@ export const ResultPage: React.FC<ResultPageProps> = ({
     const fetchRecommended = async () => {
       setLoadingJobs(true);
       try {
-        // Lấy các nghề có mainCode hoặc riasecCode trùng với Top 1 và Top 2
         const res = await occupationApi.getAll({ mainCode: top1, limit: 6 });
         setRecommendedJobs(res.items || res.data || []);
 
         if (user) {
           const saved = await savedJobsApi.getSaved().catch(() => []);
-          setSavedJobIds(new Set(saved.map((j) => j.id)));
+          setSavedJobIds(new Set(saved.map((j) => j.occupation.id)));
         }
       } catch (err) {
-        console.error('Lỗi lấy nghề đề xuất:', err);
+        console.error('Error fetching recommendations:', err);
       } finally {
         setLoadingJobs(false);
       }
@@ -78,12 +77,12 @@ export const ResultPage: React.FC<ResultPageProps> = ({
       const res = await savedJobsApi.toggleSave(occ.id);
       setSavedJobIds((prev) => {
         const next = new Set(prev);
-        if (res.saved) next.add(occ.id);
+        if (res.isSaved) next.add(occ.id);
         else next.delete(occ.id);
         return next;
       });
     } catch (err) {
-      console.error('Lỗi lưu nghề:', err);
+      console.error('Error saving career:', err);
     }
   };
 
@@ -102,15 +101,15 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#38BDF8', fontSize: '0.78rem', fontWeight: 800, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 10 }}>
-          <Sparkles size={16} /> KẾT QUẢ PHÂN TÍCH RIASEC
+          <Sparkles size={16} /> RIASEC ASSESSMENT RESULTS
         </div>
 
         <h1 style={{ fontSize: '1.65rem', fontWeight: 800, fontFamily: 'var(--font-heading)', lineHeight: 1.25 }}>
-          Mã Tính Cách: <span style={{ color: '#38BDF8' }}>{result.resultCode || `${top1}${top2}${top3}`}</span>
+          Personality Code: <span style={{ color: '#38BDF8' }}>{result.resultCode || `${top1}${top2}${top3}`}</span>
         </h1>
 
         <p style={{ fontSize: '0.86rem', color: '#94A3B8', marginTop: 8, lineHeight: 1.5 }}>
-          Nhóm sở thích nổi bật nhất của bạn là <strong>{top1Info.nameVi}</strong> ({top1Info.nameEn}), kế tiếp là {top2Info.nameVi} và {top3Info.nameVi}.
+          Your dominant interest profile is <strong>{top1Info.nameEn}</strong>, followed by {top2Info.nameEn} and {top3Info.nameEn}.
         </p>
 
         <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
@@ -120,11 +119,11 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         </div>
       </div>
 
-      {/* 2. Top 3 Match Cards (activity_result.xml) */}
+      {/* 2. Top 3 Match Cards */}
       <div>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 800, fontFamily: 'var(--font-heading)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
           <Award size={20} color="var(--primary-teal)" />
-          Top 3 Nhóm Tính Cách Của Bạn
+          Your Top 3 Personality Types
         </h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -146,14 +145,14 @@ export const ResultPage: React.FC<ResultPageProps> = ({
                 #1 TOP MATCH
               </span>
               <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                {scores[top1]} điểm
+                {scores[top1]} pts
               </span>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <RiasecBadge code={top1} size="lg" />
               <h4 style={{ fontSize: '1.15rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-                {top1Info.nameVi} ({top1Info.nameEn})
+                {top1Info.nameEn}
               </h4>
             </div>
 
@@ -186,11 +185,11 @@ export const ResultPage: React.FC<ResultPageProps> = ({
               <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}>
                 #2 SECOND MATCH
               </span>
-              <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>{scores[top2]} điểm</span>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>{scores[top2]} pts</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <RiasecBadge code={top2} size="md" />
-              <div style={{ fontSize: '0.98rem', fontWeight: 700 }}>{top2Info.nameVi}</div>
+              <div style={{ fontSize: '0.98rem', fontWeight: 700 }}>{top2Info.nameEn}</div>
             </div>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{top2Info.descriptionVi}</p>
           </div>
@@ -211,18 +210,18 @@ export const ResultPage: React.FC<ResultPageProps> = ({
               <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}>
                 #3 THIRD MATCH
               </span>
-              <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>{scores[top3]} điểm</span>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>{scores[top3]} pts</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <RiasecBadge code={top3} size="md" />
-              <div style={{ fontSize: '0.98rem', fontWeight: 700 }}>{top3Info.nameVi}</div>
+              <div style={{ fontSize: '0.98rem', fontWeight: 700 }}>{top3Info.nameEn}</div>
             </div>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{top3Info.descriptionVi}</p>
           </div>
         </div>
       </div>
 
-      {/* 3. Interest Distribution Breakdown (Interest Distribution) */}
+      {/* 3. Interest Distribution Breakdown */}
       <div
         style={{
           background: 'white',
@@ -233,7 +232,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         }}
       >
         <h3 style={{ fontSize: '1.05rem', fontWeight: 800, fontFamily: 'var(--font-heading)', marginBottom: 14 }}>
-          Phân Phối Điểm Số 6 Nhóm RIASEC
+          RIASEC Score Distribution
         </h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -246,9 +245,9 @@ export const ResultPage: React.FC<ResultPageProps> = ({
               <div key={key}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: 4 }}>
                   <span style={{ fontWeight: 700, color: item.color }}>
-                    {key} - {item.nameVi.split('/')[0]} ({item.nameEn})
+                    {key} - {item.nameEn}
                   </span>
-                  <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{score} điểm</span>
+                  <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>{score} pts</span>
                 </div>
                 <div style={{ height: 8, background: 'var(--bg-subtle)', borderRadius: 99, overflow: 'hidden' }}>
                   <div
@@ -282,9 +281,9 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <Bot size={28} color="#E0F2FE" />
           <div>
-            <h4 style={{ fontSize: '1.05rem', fontWeight: 800 }}>Tư Vấn Chuyên Sâu Cùng AI</h4>
+            <h4 style={{ fontSize: '1.05rem', fontWeight: 800 }}>In-Depth Consultation with AI Advisor</h4>
             <p style={{ fontSize: '0.8rem', color: '#BAE6FD', marginTop: 2 }}>
-              Nhận lộ trình học tập và lời khuyên phát triển nghề nghiệp theo nhóm tính cách {top1}{top2}{top3} của bạn.
+              Receive personalized learning roadmaps and career development advice for your {top1}{top2}{top3} profile.
             </p>
           </div>
         </div>
@@ -294,7 +293,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           style={{ background: 'white', color: '#0369A1', fontWeight: 800 }}
           onClick={() => onAskAiWithResult(result.resultCode || `${top1}${top2}${top3}`)}
         >
-          <Bot size={18} /> Trò Chuyện Cùng Trợ Lý AI
+          <Bot size={18} /> Chat with AI Career Advisor
         </button>
       </div>
 
@@ -303,13 +302,13 @@ export const ResultPage: React.FC<ResultPageProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 800, fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: 8 }}>
             <TrendingUp size={20} color="var(--primary-teal)" />
-            Nghề Nghiệp Phù Hợp Nhất Cho Bạn
+            Top Recommended Careers for You
           </h3>
         </div>
 
         {loadingJobs ? (
           <div style={{ textAlign: 'center', padding: '30px 0', color: 'var(--text-muted)' }}>
-            Đang gợi ý các nghề phù hợp...
+            Loading recommended careers...
           </div>
         ) : recommendedJobs.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -325,7 +324,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           </div>
         ) : (
           <div style={{ textAlign: 'center', padding: 20, background: 'white', borderRadius: 16 }}>
-            Chưa có gợi ý cụ thể. Hãy khám phá thêm trong thư viện nghề nghiệp!
+            No specific recommendations found. Explore more in our career library!
           </div>
         )}
       </div>
@@ -333,15 +332,15 @@ export const ResultPage: React.FC<ResultPageProps> = ({
       {/* 6. Footer Actions */}
       <div style={{ display: 'flex', gap: 12 }}>
         <button className="btn-secondary" onClick={onRetest} style={{ flex: 1 }}>
-          <RotateCcw size={16} /> Làm lại bài test
+          <RotateCcw size={16} /> Retake Assessment
         </button>
       </div>
 
-      {/* Gentle Reminder Disclaimer Dialog (dialog_result_disclaimer.xml) */}
+      {/* Gentle Reminder Disclaimer Dialog */}
       <Modal
         isOpen={showDisclaimer}
         onClose={() => setShowDisclaimer(false)}
-        title="Lời Nhắn Nhủ Từ Chuyên Gia"
+        title="A Note From Career Counselors"
       >
         <div style={{ textAlign: 'center', padding: '10px 0' }}>
           <div
@@ -361,16 +360,16 @@ export const ResultPage: React.FC<ResultPageProps> = ({
           </div>
 
           <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 20 }}>
-            Kết quả bài test RIASEC này là một <strong>kim chỉ nam hữu ích</strong> dựa trên sở thích và xu hướng tính cách hiện tại của bạn, không phải là giới hạn hay quyết định duy nhất cho tương lai.
+            Your RIASEC assessment result serves as a <strong>helpful guiding compass</strong> based on your current preferences and personality tendencies, rather than a fixed limit or sole determinant for your future.
             <br /><br />
-            Hãy sử dụng kết quả này như một điểm khởi đầu để tự tin khám phá các cơ hội nghề nghiệp rộng mở!
+            Use these insights as an inspiring starting point to confidently explore open career opportunities!
           </p>
 
           <button
             className="btn-primary"
             onClick={() => setShowDisclaimer(false)}
           >
-            Đã hiểu, cùng khám phá ngay!
+            Got it, let's explore!
           </button>
         </div>
       </Modal>

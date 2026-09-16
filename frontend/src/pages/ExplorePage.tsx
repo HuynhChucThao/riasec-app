@@ -38,7 +38,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
         setSavedJobIds(new Set(saved.map((j) => j.occupation.id)));
       }
     } catch (err) {
-      console.error('Lỗi tải danh sách nghề nghiệp:', err);
+      console.error('Error loading occupations list:', err);
     } finally {
       setLoading(false);
     }
@@ -68,7 +68,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
         return next;
       });
     } catch (err) {
-      console.error('Lỗi lưu nghề:', err);
+      console.error('Error saving career:', err);
     }
   };
 
@@ -77,10 +77,10 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
       {/* 1. Header Title */}
       <div>
         <h2 style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-          Khám Phá Nghề Nghiệp
+          Explore Careers
         </h2>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 2 }}>
-          Tìm kiếm và phân loại cơ hội nghề nghiệp theo mô hình tính cách RIASEC
+          Search and filter career opportunities by the RIASEC personality model
         </p>
       </div>
 
@@ -91,7 +91,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
           <input
             type="text"
             className="search-input"
-            placeholder="Tìm nghề nghiệp, từ khóa, kỹ năng..."
+            placeholder="Search careers, keywords, skills..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
@@ -113,7 +113,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
       {/* 3. Category Filter Chips (R, I, A, S, E, C) */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
-          <Filter size={14} /> Phân loại theo nhóm RIASEC:
+          <Filter size={14} /> Filter by RIASEC Type:
         </div>
 
         <div className="chip-container">
@@ -121,7 +121,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
             className={`filter-chip ${selectedCode === 'ALL' ? 'active' : ''}`}
             onClick={() => setSelectedCode('ALL')}
           >
-            Tất cả
+            All
           </button>
           {(Object.keys(RIASEC_MAP) as RiasecKey[]).map((key) => {
             const info = RIASEC_MAP[key];
@@ -137,7 +137,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                 }}
                 onClick={() => setSelectedCode(key)}
               >
-                <span>{key}</span> • <span>{info.nameVi.split('/')[0]}</span>
+                <span>{key}</span> • <span>{info.nameEn}</span>
               </button>
             );
           })}
@@ -148,18 +148,18 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-            Tìm thấy {total} nghề phù hợp
+            Found {total} matching careers
           </span>
           {selectedCode !== 'ALL' && (
             <span style={{ fontSize: '0.75rem', color: 'var(--primary-teal)', fontWeight: 600 }}>
-              Đang lọc theo: {RIASEC_MAP[selectedCode as RiasecKey]?.nameVi}
+              Filtering by: {RIASEC_MAP[selectedCode as RiasecKey]?.nameEn}
             </span>
           )}
         </div>
 
         {loading ? (
           <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>
-            Đang tìm kiếm nghề nghiệp...
+            Searching careers...
           </div>
         ) : occupations.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -184,10 +184,10 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
             }}
           >
             <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-              Không tìm thấy nghề nào phù hợp với từ khóa "{keyword}"
+              No careers found matching "{keyword}"
             </p>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 6 }}>
-              Thử tìm với từ khóa khác hoặc xóa bộ lọc để xem toàn bộ danh mục nghề.
+              Try searching with different keywords or reset the filter to view all careers.
             </p>
             <button
               className="btn-secondary"
@@ -197,7 +197,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                 setSelectedCode('ALL');
               }}
             >
-              Đặt lại bộ lọc
+              Reset Filters
             </button>
           </div>
         )}

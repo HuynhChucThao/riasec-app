@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar, History, LogIn, Sparkles } from 'lucide-react';
 import { assessmentApi } from '../api/client';
-import { RiasecBadge } from '../components/common/RiasecBadge';
 import { useAuth } from '../context/AuthContext';
 import { RiasecKey, TestHistoryItem, TestResult } from '../types';
 
@@ -23,7 +22,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectResult, onStar
           const data = await assessmentApi.getHistory();
           setHistory(data || []);
         } catch (err) {
-          console.error('Lỗi tải lịch sử:', err);
+          console.error('Error loading history:', err);
         } finally {
           setLoading(false);
         }
@@ -60,10 +59,10 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectResult, onStar
           <History size={26} />
         </div>
         <h3 style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-          Đăng Nhập Để Lưu Lịch Sử
+          Sign In to Save History
         </h3>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: 320, margin: '8px auto 20px' }}>
-          Đăng nhập vào tài khoản của bạn để lưu lại và theo dõi tiến trình thay đổi sở thích nghề nghiệp theo thời gian.
+          Log in to your account to save and track your personality results and career preferences over time.
         </p>
         <button
           className="btn-primary"
@@ -71,7 +70,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectResult, onStar
           onClick={openAuthModal}
         >
           <LogIn size={16} />
-          <span>Đăng Nhập Ngay</span>
+          <span>Log In Now</span>
         </button>
       </div>
     );
@@ -81,21 +80,21 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectResult, onStar
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       <div>
         <h2 style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-          Lịch Sử Kiểm Tra RIASEC
+          RIASEC Assessment History
         </h2>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 2 }}>
-          Xem lại các kết quả trắc nghiệm tính cách bạn đã hoàn thành
+          Review your past personality assessment results and details
         </p>
       </div>
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>
-          Đang tải lịch sử kiểm tra...
+          Loading assessment history...
         </div>
       ) : history.length > 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {history.map((item) => {
-            const dateStr = new Date(item.testedAt).toLocaleDateString('vi-VN', {
+            const dateStr = new Date(item.testedAt).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
@@ -133,19 +132,14 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectResult, onStar
                     <span>{dateStr}</span>
                   </div>
                   <span style={{ fontSize: '0.78rem', color: 'var(--primary-teal)', fontWeight: 700 }}>
-                    Chi tiết &rarr;
+                    Details &rarr;
                   </span>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{ fontSize: '1.15rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>
-                    Mã kết quả: <span style={{ color: 'var(--primary-teal)' }}>{item.resultCode}</span>
+                    Result Code: <span style={{ color: 'var(--primary-teal)' }}>{item.resultCode}</span>
                   </div>
-                  {/* <div style={{ display: 'flex', gap: 4 }}>
-                    {item.resultCode.split('').map((char, i) => (
-                      <RiasecBadge key={i} code={char} size="sm" />
-                    ))}
-                  </div> */}
                 </div>
               </div>
             );
@@ -163,17 +157,17 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectResult, onStar
         >
           <Sparkles size={32} color="var(--primary-teal)" style={{ margin: '0 auto 10px' }} />
           <p style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-            Bạn chưa thực hiện bài kiểm tra nào
+            You haven't taken any assessments yet
           </p>
           <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: 4 }}>
-            Hãy hoàn thành bài test đầu tiên để nhận định hướng nghề nghiệp phù hợp!
+            Complete your first assessment to discover your matching career paths!
           </p>
           <button
             className="btn-primary"
             style={{ marginTop: 16, width: 'auto', display: 'inline-flex' }}
             onClick={onStartTest}
           >
-            Bắt đầu làm bài ngay
+            Start Assessment Now
           </button>
         </div>
       )}

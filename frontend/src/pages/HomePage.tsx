@@ -40,7 +40,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           setSavedJobIds(new Set(saved.map((j) => j.occupation.id)));
         }
       } catch (err) {
-        console.error("Lỗi tải dữ liệu trang chủ:", err);
+        console.error("Error loading home page data:", err);
       } finally {
         setLoading(false);
       }
@@ -66,7 +66,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         return next;
       });
     } catch (err) {
-      console.error("Lỗi lưu nghề:", err);
+      console.error("Error saving career:", err);
     }
   };
 
@@ -88,7 +88,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             marginBottom: 14,
           }}
         >
-          <Sparkles size={14} /> MÔ HÌNH HƯỚNG NGHIỆP RIASEC CHUẨN QUỐC TẾ
+          <Sparkles size={14} /> INTERNATIONAL RIASEC CAREER MODEL
         </div>
 
         <h2
@@ -101,7 +101,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             marginBottom: 8,
           }}
         >
-          Chào mừng đến với RIASEC Career Test
+          Welcome to RIASEC Career Test
         </h2>
 
         <p
@@ -112,12 +112,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             marginBottom: 20,
           }}
         >
-          Khám phá tiềm năng bản thân, xác định nhóm tính cách nổi trội và định
-          hướng nghề nghiệp phù hợp nhất cho tương lai của bạn.
+          Discover your potential, identify your dominant personality traits, and
+          find the best career paths tailored for your future.
         </p>
 
         <button className="btn-primary" onClick={() => onNavigate("pre-test")}>
-          <span>Bắt Đầu Làm Bài Test Ngay</span>
+          <span>Start Assessment Now</span>
           <ArrowRight size={18} />
         </button>
       </div>
@@ -142,8 +142,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               gap: 8,
             }}
           >
-            <BookOpen size={18} color="var(--primary-teal)" />6 Nhóm Tính Cách
-            RIASEC
+            <BookOpen size={18} color="var(--primary-teal)" />
+            6 RIASEC Personality Types
           </h3>
           <span
             style={{
@@ -154,7 +154,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             }}
             onClick={() => onNavigate("explore")}
           >
-            Khám phá &rarr;
+            Explore &rarr;
           </span>
         </div>
 
@@ -214,7 +214,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     color: "var(--text-primary)",
                   }}
                 >
-                  {item.nameVi.split("/")[0]}
+                  {item.nameEn}
                 </div>
               </div>
             );
@@ -243,7 +243,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             }}
           >
             <TrendingUp size={18} color="var(--primary-teal)" />
-            Nghề Nghiệp Đề Xuất Nổi Bật
+            Featured & Recommended Careers
           </h3>
           <span
             style={{
@@ -254,7 +254,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             }}
             onClick={() => onNavigate("explore")}
           >
-            Xem tất cả
+            View all
           </span>
         </div>
 
@@ -267,7 +267,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               fontSize: "0.88rem",
             }}
           >
-            Đang tải dữ liệu nghề nghiệp...
+            Loading career data...
           </div>
         ) : popularOccupations.length > 0 ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -297,15 +297,15 @@ export const HomePage: React.FC<HomePageProps> = ({
               style={{ margin: "0 auto 10px" }}
             />
             <p style={{ fontSize: "0.88rem", color: "var(--text-secondary)" }}>
-              Hãy thực hiện bài trắc nghiệm RIASEC để nhận các gợi ý nghề nghiệp
-              cá nhân hóa dành riêng cho bạn!
+              Take the RIASEC personality assessment to receive personalized
+              career recommendations tailored just for you!
             </p>
             <button
               className="btn-primary"
               style={{ marginTop: 14, width: "auto", display: "inline-flex" }}
               onClick={() => onNavigate("pre-test")}
             >
-              Làm bài test ngay
+              Start Assessment Now
             </button>
           </div>
         )}

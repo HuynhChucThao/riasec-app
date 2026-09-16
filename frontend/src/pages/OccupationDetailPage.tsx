@@ -40,7 +40,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
           setIsSaved(savedList.some((j) => j.occupation.id === detail.id));
         }
       } catch (err) {
-        console.error('Lỗi tải chi tiết nghề:', err);
+        console.error('Error loading career details:', err);
       }
     };
     fetchFreshDetail();
@@ -56,7 +56,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
       const res = await savedJobsApi.toggleSave(occupation.id);
       setIsSaved(res.isSaved);
     } catch (err) {
-      console.error('Lỗi lưu nghề:', err);
+      console.error('Error saving career:', err);
     } finally {
       setSaving(false);
     }
@@ -82,7 +82,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
           onClick={onBack}
           style={{ padding: '8px 14px', borderRadius: 20, fontSize: '0.82rem' }}
         >
-          <ArrowLeft size={16} /> Quay lại
+          <ArrowLeft size={16} /> Back
         </button>
 
         <button
@@ -99,7 +99,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
           }}
         >
           <Bookmark size={16} fill={isSaved ? '#E11D48' : 'none'} />
-          <span>{isSaved ? 'Đã lưu nghề' : 'Lưu nghề'}</span>
+          <span>{isSaved ? 'Saved' : 'Save Career'}</span>
         </button>
       </div>
 
@@ -132,11 +132,11 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: '0.82rem', color: 'var(--text-muted)' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-            <Eye size={14} /> {occupation.viewCount || 0} lượt quan tâm
+            <Eye size={14} /> {occupation.viewCount || 0} views
           </span>
           <span>•</span>
           <span style={{ color: mainRiasecInfo.color, fontWeight: 600 }}>
-            Nhóm tính cách chủ đạo: {mainRiasecInfo.nameEn}
+            Dominant Personality Type: {mainRiasecInfo.nameEn}
           </span>
         </div>
       </div>
@@ -161,7 +161,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
               color: 'var(--text-primary)',
             }}
           >
-            Tổng Quan Nghề Nghiệp (Overview)
+            Career Overview
           </h3>
           <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
             {occupation.description}
@@ -193,7 +193,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
             }}
           >
             <GraduationCap size={18} color="var(--primary-teal)" />
-            Trình Độ Học Vấn Đề Xuất (Education)
+            Recommended Education
           </h3>
           <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
             {occupation.education}
@@ -225,7 +225,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
             }}
           >
             <ListChecks size={18} color="var(--primary-blue)" />
-            Nhiệm Vụ & Trách Nhiệm Chính (Key Responsibilities)
+            Key Tasks & Responsibilities
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {tasks.map((task, idx) => (
@@ -272,7 +272,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
             }}
           >
             <Sparkles size={18} color="#D97706" />
-            Kỹ Năng Quan Trọng (Top Skills)
+            Top Required Skills
           </h3>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {skills.map((skill, idx) => (
@@ -322,9 +322,9 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
             <Bot size={20} color="#38BDF8" />
           </div>
           <div>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 700 }}>Bạn muốn tìm hiểu sâu hơn?</h4>
+            <h4 style={{ fontSize: '0.95rem', fontWeight: 700 }}>Want to explore further?</h4>
             <p style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
-              Hỏi Trợ lý AI về lộ trình học tập, cơ hội việc làm và mức lương của nghề này.
+              Ask the AI Advisor about learning pathways, market trends, and salary ranges for this career.
             </p>
           </div>
         </div>
@@ -335,7 +335,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
           onClick={() => onAskAi(occupation.jobName, occupation.riasecCode || occupation.mainCode)}
         >
           <Bot size={18} />
-          <span>Hỏi Trợ Lý AI Về Nghề Này</span>
+          <span>Ask AI Advisor About This Career</span>
         </button>
       </div>
     </div>

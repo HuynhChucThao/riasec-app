@@ -3,9 +3,8 @@ import React from 'react';
 import { TableProps } from 'antd';
 import * as S from './BaseTable.style';
 
-export type BaseTableProps<T> = TableProps<T>;
+export type BaseTableProps<T = any> = TableProps<T>;
 
-// TODO make generic!
-export const BaseTable: React.FC<BaseTableProps<any>> = (props) => {
-  return <S.Table {...props} />;
-};
+export function BaseTable<T extends object = any>(props: BaseTableProps<T>): React.ReactElement {
+  return <S.Table {...(props as any)} />;
+}
