@@ -72,8 +72,8 @@ Vui lòng bổ sung Google Gemini API Key vào file \`backend/.env\` để kích
         parts: [{ text: dto.message }],
       });
 
-      // 4. Gọi Google Gemini API (gemini-2.5-flash hoặc gemini-1.5-flash)
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+      // 4. Gọi Google Gemini API
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
       const response = await fetch(url, {
         method: 'POST',
