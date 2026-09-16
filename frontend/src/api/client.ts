@@ -8,6 +8,7 @@ import {
 
 const API_BASE = "/api";
 
+
 class ApiError extends Error {
   status: number;
   constructor(message: string, status: number) {
@@ -171,4 +172,72 @@ export const feedbackApi = {
       method: "POST",
       body: JSON.stringify({ content, rating }),
     }),
+};
+
+// 7. Admin APIs
+export const adminApi = {
+  getQuestions: () => request<Question[]>(`/questions`),
+  getDashboardStats: () => request<any>("/admin/dashboard-stats"),
+
+  createQuestion: (data: { content: string; type: string }) =>
+    request("/questions", { method: "POST", body: JSON.stringify(data) }),
+  updateQuestion: (id: string, data: { content: string; type: string }) =>
+    request(`/questions/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteQuestion: (id: string) =>
+    request(`/questions/${id}`, { method: "DELETE" }),
+
+  getOccupations: (params?: {
+    keyword?: string;
+    riasecCode?: string;
+    mainCode?: string;
+    page?: number;
+    limit?: number;
+  }) => {
+    const query = new URLSearchParams();
+    if (params?.keyword) query.append("keyword", params.keyword);
+    if (params?.riasecCode) query.append("riasecCode", params.riasecCode);
+    if (params?.mainCode) query.append("mainCode", params.mainCode);
+    if (params?.page) query.append("page", params.page.toString());
+    if (params?.limit) query.append("limit", params.limit.toString());
+    return request<{
+      items: Occupation[];
+      data?: Occupation[];
+      total: number;
+      page: number;
+      limit: number;
+    }>(`/occupations?${query.toString()}`);
+  },
+  createOccupation: (data: {
+    jobName: string;
+    mainCode: string;
+    riasecCode: string;
+    description?: string;
+  }) => request("/occupations", { method: "POST", body: JSON.stringify(data) }),
+  updateOccupation: (id: number, data: { jobName: string; mainCode: string }) =>
+    request(`/occupations/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteOccupation: (id: number) =>
+    request(`/occupations/${id}`, { method: "DELETE" }),
+
+  getUsers: () =>
+    request<{ id: string; name?: string; email: string; role: string }[]>(
+      "/users",
+    ),
+  updateUserRole: (id: string, role: string) =>
+    request(`/users/${id}/role`, {
+      method: "PATCH",
+      body: JSON.stringify({ role }),
+    }),
+  deleteUser: (id: string) =>
+    request(`/admin/users/${id}`, { method: "DELETE" }),
+
+  getFeedback: () =>
+    request<
+      { id: string; userEmail: string; rating: number; content: string }[]
+    >("/feedback"),
 };
