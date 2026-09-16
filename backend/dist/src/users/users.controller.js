@@ -25,6 +25,9 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
+    findAll() {
+        return this.usersService.findAll();
+    }
     getProfile(userId) {
         return this.usersService.getProfile(userId);
     }
@@ -39,6 +42,12 @@ let UsersController = class UsersController {
     }
 };
 exports.UsersController = UsersController;
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)('profile'),
     __param(0, (0, current_user_decorator_1.CurrentUser)('id')),

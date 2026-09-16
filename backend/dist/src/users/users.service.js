@@ -17,6 +17,11 @@ let UsersService = class UsersService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async findAll() {
+        return this.prisma.user.findMany({
+            select: { id: true, name: true, email: true, role: true, createdAt: true },
+        });
+    }
     async getProfile(userId) {
         const user = await this.prisma.user.findUnique({
             where: { id: userId },
