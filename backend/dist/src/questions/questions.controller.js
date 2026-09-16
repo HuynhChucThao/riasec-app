@@ -28,6 +28,10 @@ let QuestionsController = class QuestionsController {
     findAll(type) {
         return this.questionsService.findAll(type);
     }
+    getTestSet(perType) {
+        const count = perType ? parseInt(perType, 10) : 7;
+        return this.questionsService.findBalancedTestSet(count);
+    }
     findOne(id) {
         return this.questionsService.findOne(id);
     }
@@ -49,6 +53,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], QuestionsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('test-set'),
+    __param(0, (0, common_1.Query)('perType')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], QuestionsController.prototype, "getTestSet", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

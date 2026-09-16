@@ -26,6 +26,12 @@ export class QuestionsController {
     return this.questionsService.findAll(type);
   }
 
+  @Get('test-set')
+  getTestSet(@Query('perType') perType?: string) {
+    const count = perType ? parseInt(perType, 10) : 7;
+    return this.questionsService.findBalancedTestSet(count);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.questionsService.findOne(id);
