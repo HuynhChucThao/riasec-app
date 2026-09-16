@@ -7,7 +7,7 @@ import {
   Home,
   LogIn,
   Sparkles,
-  User as UserIcon,
+  // User as UserIcon,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -24,7 +24,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ activeTab, onSelectTab }) 
       <div className="header-inner">
         {/* Brand Logo */}
         <div className="header-brand" onClick={() => onSelectTab('home')}>
-          <div className="header-logo-badge">R</div>
+          <div className="header-logo-badge">AiRa</div>
           <div className="header-title-group">
             <h1>RIASEC Career AI</h1>
             <span>Nền Tảng Hướng Nghiệp & Tư Vấn Thông Minh</span>

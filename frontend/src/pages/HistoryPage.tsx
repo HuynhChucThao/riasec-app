@@ -141,11 +141,11 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectResult, onStar
                   <div style={{ fontSize: '1.15rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>
                     Mã kết quả: <span style={{ color: 'var(--primary-teal)' }}>{item.resultCode}</span>
                   </div>
-                  <div style={{ display: 'flex', gap: 4 }}>
+                  {/* <div style={{ display: 'flex', gap: 4 }}>
                     {item.resultCode.split('').map((char, i) => (
                       <RiasecBadge key={i} code={char} size="sm" />
                     ))}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             );

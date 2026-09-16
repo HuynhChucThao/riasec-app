@@ -35,7 +35,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
 
       if (user) {
         const saved = await savedJobsApi.getSaved().catch(() => []);
-        setSavedJobIds(new Set(saved.map((j) => j.id)));
+        setSavedJobIds(new Set(saved.map((j) => j.occupation.id)));
       }
     } catch (err) {
       console.error('Lỗi tải danh sách nghề nghiệp:', err);
@@ -63,7 +63,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
       const res = await savedJobsApi.toggleSave(occ.id);
       setSavedJobIds((prev) => {
         const next = new Set(prev);
-        if (res.saved) next.add(occ.id);
+        if (res.isSaved) next.add(occ.id);
         else next.delete(occ.id);
         return next;
       });

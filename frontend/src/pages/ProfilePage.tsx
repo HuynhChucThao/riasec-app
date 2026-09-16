@@ -46,7 +46,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectOccupation }) 
         setLoadingJobs(true);
         try {
           const list = await savedJobsApi.getSaved();
-          setSavedJobs(list || []);
+          setSavedJobs(list.map((l)=> l.occupation) || []);
         } catch (err) {
           console.error('Lỗi tải nghề đã lưu:', err);
         } finally {
