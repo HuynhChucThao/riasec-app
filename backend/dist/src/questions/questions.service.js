@@ -22,6 +22,19 @@ let QuestionsService = class QuestionsService {
             orderBy: { createdAt: 'asc' },
         });
     }
+    async findBalancedTestSet(perType = 7) {
+        const RIASEC_TYPES = ['R', 'I', 'A', 'S', 'E', 'C'];
+        const groups = await Promise.all(RIASEC_TYPES.map((type) => this.prisma.question.findMany({ where: { type } })));
+        const selected = groups.flatMap((group, idx) => {
+            const shuffled = [...group].sort(() => Math.random() - 0.5);
+            const picked = shuffled.slice(0, perType);
+            if (picked.length < perType) {
+                console.warn(`Nhóm ${RIASEC_TYPES[idx]} chỉ có ${picked.length}/${perType} câu hỏi trong database.`);
+            }
+            return picked;
+        });
+        return selected.sort(() => Math.random() - 0.5);
+    }
     async findOne(id) {
         const question = await this.prisma.question.findUnique({
             where: { id },
