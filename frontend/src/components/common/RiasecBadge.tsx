@@ -8,6 +8,7 @@ interface RiasecBadgeProps {
 }
 
 export const RiasecBadge: React.FC<RiasecBadgeProps> = ({ code, size = 'sm', showFullName = false }) => {
+  if (!code) return null;
   const mainLetter = (code[0]?.toUpperCase() || 'R') as RiasecKey;
   const info = RIASEC_MAP[mainLetter] || RIASEC_MAP.R;
 

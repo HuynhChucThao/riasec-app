@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { authApi, getAuthToken, setAuthToken } from '../api/client';
-import { User } from '../types';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { authApi, getAuthToken, setAuthToken } from "../api/client";
+import { User } from "../types";
 
 interface AuthContextType {
   user: User | null;
@@ -10,14 +10,21 @@ interface AuthContextType {
   openAuthModal: () => void;
   closeAuthModal: () => void;
   login: (email: string, pass: string) => Promise<void>;
-  register: (email: string, pass: string, name?: string, dreamWork?: string) => Promise<void>;
+  register: (
+    email: string,
+    pass: string,
+    name?: string,
+    dreamWork?: string,
+  ) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setTokenState] = useState<string | null>(getAuthToken());
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -52,16 +59,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, pass: string) => {
     const result = await authApi.login({ email, password: pass });
-    setAuthToken(result.token);
-    setTokenState(result.token);
+    setAuthToken(result.accessToken); // sửa: result.token -> result.accessToken
+    setTokenState(result.accessToken); // sửa: result.token -> result.accessToken
     setUser(result.user);
     closeAuthModal();
   };
 
-  const register = async (email: string, pass: string, name?: string, dreamWork?: string) => {
-    const result = await authApi.register({ email, password: pass, name, dreamWork });
-    setAuthToken(result.token);
-    setTokenState(result.token);
+  const register = async (
+    email: string,
+    pass: string,
+    name?: string,
+    dreamWork?: string,
+  ) => {
+    const result = await authApi.register({
+      email,
+      password: pass,
+      name,
+      dreamWork,
+    });
+    setAuthToken(result.accessToken); // sửa: result.token -> result.accessToken
+    setTokenState(result.accessToken); // sửa: result.token -> result.accessToken
     setUser(result.user);
     closeAuthModal();
   };
@@ -95,7 +112,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

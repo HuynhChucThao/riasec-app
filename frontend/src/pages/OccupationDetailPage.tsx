@@ -37,7 +37,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
         setOccupation(detail);
         if (user) {
           const savedList = await savedJobsApi.getSaved().catch(() => []);
-          setIsSaved(savedList.some((j) => j.id === detail.id));
+          setIsSaved(savedList.some((j) => j.occupation.id === detail.id));
         }
       } catch (err) {
         console.error('Lỗi tải chi tiết nghề:', err);
@@ -54,7 +54,7 @@ export const OccupationDetailPage: React.FC<OccupationDetailPageProps> = ({
     setSaving(true);
     try {
       const res = await savedJobsApi.toggleSave(occupation.id);
-      setIsSaved(res.saved);
+      setIsSaved(res.isSaved);
     } catch (err) {
       console.error('Lỗi lưu nghề:', err);
     } finally {
