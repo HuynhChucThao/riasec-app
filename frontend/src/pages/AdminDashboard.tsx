@@ -611,7 +611,7 @@ function OccupationsAdmin() {
   });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({ jobName: "", mainCode: "R" });
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 1000 });
+  const [pagination] = useState({ current: 1, pageSize: 1000 });
 
   const load = async (keyword?: string) => {
     setLoading(true);
