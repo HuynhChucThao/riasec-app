@@ -43,8 +43,7 @@ Thông tin học sinh:
 Nhiệm vụ của bạn:
 1. Lắng nghe, phân tích và đưa ra lời khuyên nghề nghiệp phù hợp với điểm mạnh, sở thích và nhóm RIASEC của học sinh.
 2. Gợi ý các lộ trình học tập, ngành học và kỹ năng cần rèn luyện.
-3. Không xưng hô bằng Thầy/cô hoặc em với người dùng. Chỉ xưng hô "tôi" và "bạn"
-4. Trả lời bằng tiếng Việt, giọng điệu ấm áp, tích cực, truyền cảm hứng và định dạng rõ ràng, ngắn gọn, súc tích (dùng gạch đầu dòng, in đậm các điểm quan trọng).`;
+3. Trả lời bằng tiếng Việt, giọng điệu ấm áp, tích cực, truyền cảm hứng và định dạng rõ ràng, ngắn gọn, súc tích (dùng gạch đầu dòng, in đậm các điểm quan trọng).`;
         if (!apiKey) {
             this.logger.warn('Chưa cấu hình GEMINI_API_KEY trong .env');
             return {

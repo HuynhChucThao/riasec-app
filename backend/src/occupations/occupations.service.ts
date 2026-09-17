@@ -1,10 +1,49 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import {
+  CreateOccupationDto,
+  UpdateOccupationDto,
+} from './dto/occupations.dto';
 
 @Injectable()
 export class OccupationsService {
   constructor(private prisma: PrismaService) {}
 
+  async create(dto: CreateOccupationDto) {
+    return this.prisma.occupation.create({
+      data: {
+        jobName: dto.jobName,
+        description: dto.description,
+        riasecCode: dto.riasecCode,
+        mainCode: dto.mainCode,
+        education: dto.education,
+        taskRaw: dto.taskRaw.join('|'),
+        skillsRaw: dto.skillRaw.join('|'),
+      },
+    });
+  }
+
+  async update(id: number, dto: UpdateOccupationDto) {
+    await this.findOne(id);
+    return this.prisma.occupation.update({
+      where: { id },
+      data: {
+        jobName: dto.jobName,
+        description: dto.description,
+        riasecCode: dto.riasecCode,
+        mainCode: dto.mainCode,
+        education: dto.education,
+        taskRaw: dto.taskRaw.join('|'),
+        skillsRaw: dto.skillRaw.join('|'),
+      },
+    });
+  }
+  async remove(id: number) {
+    await this.findOne(id);
+    return this.prisma.occupation.delete({
+      where: { id },
+    });
+  }
   async findAll(params: {
     keyword?: string;
     riasecCode?: string;
@@ -47,7 +86,7 @@ export class OccupationsService {
       page: Number(page),
       limit: Number(limit),
       totalPages: Math.ceil(total / limit),
-      items: items.map(item => this.formatOccupation(item)),
+      items: items.map((item) => this.formatOccupation(item)),
     };
   }
 
@@ -69,7 +108,9 @@ export class OccupationsService {
       data: { viewCount: { increment: 1 } },
     });
 
-    const isSaved = userId ? (occupation.savedBy && occupation.savedBy.length > 0) : false;
+    const isSaved = userId
+      ? occupation.savedBy && occupation.savedBy.length > 0
+      : false;
 
     return {
       ...this.formatOccupation(occupation),
@@ -80,10 +121,16 @@ export class OccupationsService {
 
   private formatOccupation(occupation: any) {
     const tasks = occupation.taskRaw
-      ? occupation.taskRaw.split('|').map((t: string) => t.trim()).filter(Boolean)
+      ? occupation.taskRaw
+          .split('|')
+          .map((t: string) => t.trim())
+          .filter(Boolean)
       : [];
     const skills = occupation.skillsRaw
-      ? occupation.skillsRaw.split('|').map((s: string) => s.trim()).filter(Boolean)
+      ? occupation.skillsRaw
+          .split('|')
+          .map((s: string) => s.trim())
+          .filter(Boolean)
       : [];
 
     return {

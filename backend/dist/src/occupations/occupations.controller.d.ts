@@ -1,4 +1,5 @@
 import { OccupationsService } from './occupations.service';
+import { CreateOccupationDto, UpdateOccupationDto } from './dto/occupations.dto';
 export declare class OccupationsController {
     private readonly occupationsService;
     constructor(occupationsService: OccupationsService);
@@ -34,5 +35,44 @@ export declare class OccupationsController {
         imageName: any;
         tasks: any;
         skills: any;
+    }>;
+    create(dto: CreateOccupationDto): Promise<{
+        id: number;
+        jobName: string;
+        description: string | null;
+        riasecCode: string;
+        mainCode: string;
+        interestId: number | null;
+        education: string | null;
+        taskRaw: string | null;
+        skillsRaw: string | null;
+        imageName: string | null;
+        viewCount: number;
+    }>;
+    update(id: number, dto: UpdateOccupationDto): Promise<{
+        id: number;
+        jobName: string;
+        description: string | null;
+        riasecCode: string;
+        mainCode: string;
+        interestId: number | null;
+        education: string | null;
+        taskRaw: string | null;
+        skillsRaw: string | null;
+        imageName: string | null;
+        viewCount: number;
+    }>;
+    remove(id: number): Promise<{
+        id: number;
+        jobName: string;
+        description: string | null;
+        riasecCode: string;
+        mainCode: string;
+        interestId: number | null;
+        education: string | null;
+        taskRaw: string | null;
+        skillsRaw: string | null;
+        imageName: string | null;
+        viewCount: number;
     }>;
 }

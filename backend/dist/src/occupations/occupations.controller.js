@@ -15,6 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OccupationsController = void 0;
 const common_1 = require("@nestjs/common");
 const occupations_service_1 = require("./occupations.service");
+const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
+const roles_decorator_1 = require("../common/decorators/roles.decorator");
+const occupations_dto_1 = require("./dto/occupations.dto");
+const roles_guard_1 = require("../common/guards/roles.guard");
+const client_1 = require("@prisma/client");
 let OccupationsController = class OccupationsController {
     constructor(occupationsService) {
         this.occupationsService = occupationsService;
@@ -30,6 +35,15 @@ let OccupationsController = class OccupationsController {
     }
     findOne(id, userId) {
         return this.occupationsService.findOne(id, userId);
+    }
+    create(dto) {
+        return this.occupationsService.create(dto);
+    }
+    update(id, dto) {
+        return this.occupationsService.update(id, dto);
+    }
+    remove(id) {
+        return this.occupationsService.remove(id);
     }
 };
 exports.OccupationsController = OccupationsController;
@@ -52,6 +66,34 @@ __decorate([
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", void 0)
 ], OccupationsController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN),
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [occupations_dto_1.CreateOccupationDto]),
+    __metadata("design:returntype", void 0)
+], OccupationsController.prototype, "create", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN),
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, occupations_dto_1.UpdateOccupationDto]),
+    __metadata("design:returntype", void 0)
+], OccupationsController.prototype, "update", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN),
+    (0, common_1.Delete)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], OccupationsController.prototype, "remove", null);
 exports.OccupationsController = OccupationsController = __decorate([
     (0, common_1.Controller)('occupations'),
     __metadata("design:paramtypes", [occupations_service_1.OccupationsService])

@@ -16,6 +16,40 @@ let OccupationsService = class OccupationsService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async create(dto) {
+        return this.prisma.occupation.create({
+            data: {
+                jobName: dto.jobName,
+                description: dto.description,
+                riasecCode: dto.riasecCode,
+                mainCode: dto.mainCode,
+                education: dto.education,
+                taskRaw: dto.taskRaw.join('|'),
+                skillsRaw: dto.skillRaw.join('|'),
+            },
+        });
+    }
+    async update(id, dto) {
+        await this.findOne(id);
+        return this.prisma.occupation.update({
+            where: { id },
+            data: {
+                jobName: dto.jobName,
+                description: dto.description,
+                riasecCode: dto.riasecCode,
+                mainCode: dto.mainCode,
+                education: dto.education,
+                taskRaw: dto.taskRaw.join('|'),
+                skillsRaw: dto.skillRaw.join('|'),
+            },
+        });
+    }
+    async remove(id) {
+        await this.findOne(id);
+        return this.prisma.occupation.delete({
+            where: { id },
+        });
+    }
     async findAll(params) {
         const { keyword, riasecCode, mainCode, page = 1, limit = 20 } = params;
         const skip = (page - 1) * limit;
@@ -46,7 +80,7 @@ let OccupationsService = class OccupationsService {
             page: Number(page),
             limit: Number(limit),
             totalPages: Math.ceil(total / limit),
-            items: items.map(item => this.formatOccupation(item)),
+            items: items.map((item) => this.formatOccupation(item)),
         };
     }
     async findOne(id, userId) {
@@ -63,7 +97,9 @@ let OccupationsService = class OccupationsService {
             where: { id },
             data: { viewCount: { increment: 1 } },
         });
-        const isSaved = userId ? (occupation.savedBy && occupation.savedBy.length > 0) : false;
+        const isSaved = userId
+            ? occupation.savedBy && occupation.savedBy.length > 0
+            : false;
         return {
             ...this.formatOccupation(occupation),
             viewCount: occupation.viewCount + 1,
@@ -72,10 +108,16 @@ let OccupationsService = class OccupationsService {
     }
     formatOccupation(occupation) {
         const tasks = occupation.taskRaw
-            ? occupation.taskRaw.split('|').map((t) => t.trim()).filter(Boolean)
+            ? occupation.taskRaw
+                .split('|')
+                .map((t) => t.trim())
+                .filter(Boolean)
             : [];
         const skills = occupation.skillsRaw
-            ? occupation.skillsRaw.split('|').map((s) => s.trim()).filter(Boolean)
+            ? occupation.skillsRaw
+                .split('|')
+                .map((s) => s.trim())
+                .filter(Boolean)
             : [];
         return {
             id: occupation.id,

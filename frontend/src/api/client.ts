@@ -183,7 +183,7 @@ export const adminApi = {
     request("/questions", { method: "POST", body: JSON.stringify(data) }),
   updateQuestion: (id: string, data: { content: string; type: string }) =>
     request(`/questions/${id}`, {
-      method: "PATCH",
+      method: "PUT",
       body: JSON.stringify(data),
     }),
   deleteQuestion: (id: string) =>
@@ -238,6 +238,6 @@ export const adminApi = {
 
   getFeedback: () =>
     request<
-      { id: string; userEmail: string; rating: number; content: string }[]
+      { id: string; user: User; rating: number; content: string }[]
     >("/feedback"),
 };

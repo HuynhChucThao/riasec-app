@@ -106,6 +106,7 @@ export interface TestResult {
   primaryType?: string;
   recommendedJobs?: Occupation[];
   testedAt?: string;
+  user?: User;
 }
 
 export interface TestHistoryItem {

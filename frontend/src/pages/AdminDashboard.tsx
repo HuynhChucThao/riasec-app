@@ -12,11 +12,13 @@ import {
   MessageSquare,
   Users as UsersIcon,
   LayoutDashboard,
+  Trash,
 } from "lucide-react";
 import { adminApi, occupationApi } from "../api/client";
 import { ColumnsType } from "antd/es/table";
 import { BaseTable } from "../components/common/BaseTable/BaseTable";
 import { Select } from "antd";
+import { User } from "../types";
 
 type TabKey = "overview" | "questions" | "occupations" | "users" | "feedback";
 
@@ -243,15 +245,49 @@ function OverviewAdmin() {
   if (!stats) return <p>Could not load dashboard statistics.</p>;
 
   const maxDist = Math.max(1, ...Object.values(stats.riasecDistribution));
-
+  const recentTestsColumns: ColumnsType<DashboardStats["recentTests"][number]> =
+    [
+      {
+        title: "No.",
+        dataIndex: "index",
+        key: "index",
+        width: 60,
+        align: "right",
+        render: (_, __, index) => index + 1,
+      },
+      {
+        title: "User",
+        dataIndex: "user",
+        key: "user",
+        render: (_: any, record) =>
+          record.user?.name || record.user?.email || "Anonymous User",
+      },
+      {
+        title: "Result Code",
+        dataIndex: "resultCode",
+        key: "resultCode",
+        align: "center",
+        render: (code: string) => (
+          <span style={{ fontWeight: 700 }}>{code}</span>
+        ),
+      },
+      {
+        title: "Date Tested",
+        dataIndex: "testedAt",
+        key: "testedAt",
+        align: "right",
+        render: (date: string) => (
+          <span style={{ color: "#6B7280" }}>
+            {new Date(date).toLocaleDateString("en-US")}
+          </span>
+        ),
+      },
+    ];
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
         <StatCard label="Total Users" value={stats.overview.totalUsers} />
-        <StatCard
-          label="Students"
-          value={stats.overview.totalStudents}
-        />
+        <StatCard label="Students" value={stats.overview.totalStudents} />
         <StatCard label="Assessments Taken" value={stats.overview.totalTests} />
         <StatCard label="Occupations" value={stats.overview.totalOccupations} />
         <StatCard
@@ -307,28 +343,13 @@ function OverviewAdmin() {
         <h3 style={{ fontSize: "0.95rem", fontWeight: 700, marginBottom: 14 }}>
           5 Most Recent Assessments
         </h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {stats.recentTests.map((t) => (
-            <div
-              key={t.id}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontSize: "0.85rem",
-                borderBottom: "1px solid #F3F4F6",
-                paddingBottom: 8,
-              }}
-            >
-              <span>
-                {t.user?.name || t.user?.email || "Anonymous User"}
-              </span>
-              <span style={{ fontWeight: 700 }}>{t.resultCode}</span>
-              <span style={{ color: "#6B7280" }}>
-                {new Date(t.testedAt).toLocaleDateString("en-US")}
-              </span>
-            </div>
-          ))}
-        </div>
+        <BaseTable
+          columns={recentTestsColumns}
+          dataSource={stats.recentTests}
+          rowKey="id"
+          pagination={false}
+          size="small"
+        />
       </div>
     </div>
   );
@@ -349,6 +370,7 @@ function QuestionsAdmin() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
   const [editType, setEditType] = useState("R");
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
 
   const load = async () => {
     setLoading(true);
@@ -421,7 +443,7 @@ function QuestionsAdmin() {
       title: "No.",
       dataIndex: "index",
       key: "index",
-      width: 50,
+      width: 60,
       align: "right",
       render: (_, __, index) => index + 1,
     },
@@ -483,7 +505,8 @@ function QuestionsAdmin() {
       title: "Type",
       dataIndex: "type",
       key: "type",
-      width: 90,
+      width: 150,
+      align: "center",
       render: (_, record) =>
         editingId === record.id ? (
           <select
@@ -552,8 +575,15 @@ function QuestionsAdmin() {
           columns={columns}
           dataSource={filtered}
           loading={loading}
-          pagination={{ pageSize: 10 }}
+          pagination={{
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            showSizeChanger: true,
+            onChange: (page, pageSize) =>
+              setPagination({ current: page, pageSize }),
+          }}
           locale={{ emptyText: "No questions found." }}
+          scroll={{ y: 540 }}
         />
       )}
     </div>
@@ -581,11 +611,16 @@ function OccupationsAdmin() {
   });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({ jobName: "", mainCode: "R" });
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 1000 });
 
   const load = async (keyword?: string) => {
     setLoading(true);
     try {
-      const res = await occupationApi.getAll({ keyword, limit: 100 });
+      const res = await occupationApi.getAll({
+        keyword,
+        limit: pagination.pageSize,
+        page: pagination.current,
+      });
       setItems((res.items || res.data || []) as OccupationItem[]);
     } catch (err) {
       console.error("Error loading occupations:", err);
@@ -655,7 +690,7 @@ function OccupationsAdmin() {
       title: "No.",
       dataIndex: "index",
       key: "index",
-      width: 50,
+      width: 60,
       align: "right",
       render: (_, __, index) => index + 1,
     },
@@ -715,10 +750,11 @@ function OccupationsAdmin() {
         ),
     },
     {
-      title: "Group",
+      title: "Main Code",
       dataIndex: "mainCode",
       key: "mainCode",
-      width: 70,
+      width: 120,
+      align: "center",
       render: (_, record) =>
         editingId === record.id ? (
           <select
@@ -742,6 +778,7 @@ function OccupationsAdmin() {
       title: "RIASEC Code",
       dataIndex: "riasecCode",
       key: "riasecCode",
+      align: "center",
       render: (_, record) =>
         editingId === record.id ? (
           <input
@@ -852,8 +889,8 @@ function OccupationsAdmin() {
           columns={columnsOccupation}
           dataSource={filtered}
           loading={loading}
-          pagination={{ pageSize: 10 }}
           locale={{ emptyText: "No occupations found." }}
+          scroll={{ y: 640 }}
         />
       )}
     </div>
@@ -922,20 +959,22 @@ function UsersAdmin() {
     {
       title: "No.",
       key: "index",
-      width: 50,
+      width: 60,
+      align: 'right',
       render: (_, __, index) => index + 1,
     },
     {
       title: "Actions",
       key: "action",
       width: 100,
+      align: 'center',
       render: (_, record) => (
         <div style={{ display: "flex", gap: 4 }}>
           <button
             onClick={() => handleDelete(record.id)}
             style={iconBtnStyle("#EF4444")}
           >
-            <Trash2 size={15} />
+            <Trash size={15} />
           </button>
         </div>
       ),
@@ -955,7 +994,8 @@ function UsersAdmin() {
       title: "Role",
       dataIndex: "role",
       key: "role",
-      width: 140,
+      width: 180,
+      align: 'center',
       render: (_, record) => (
         <Select
           value={record.role}
@@ -992,7 +1032,7 @@ function UsersAdmin() {
 }
 interface FeedbackItem {
   id: string;
-  userEmail: string;
+  user: User;
   rating: number;
   content: string;
 }
@@ -1080,7 +1120,7 @@ function FeedbackAdmin() {
                 color: "#6B7280",
               }}
             >
-              <span>{f.userEmail}</span>
+              <span>{f.user?.email}</span>
               <span>{"⭐".repeat(Math.round(f.rating))}</span>
             </div>
             <p style={{ marginTop: 6 }}>{f.content}</p>

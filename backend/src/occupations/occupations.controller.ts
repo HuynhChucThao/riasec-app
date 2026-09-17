@@ -1,5 +1,22 @@
-import { Controller, Get, Param, ParseIntPipe, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { OccupationsService } from './occupations.service';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { CreateOccupationDto, UpdateOccupationDto } from './dto/occupations.dto';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Role } from '@prisma/client';
 
 @Controller('occupations')
 export class OccupationsController {
@@ -28,5 +45,26 @@ export class OccupationsController {
     @Query('userId') userId?: string,
   ) {
     return this.occupationsService.findOne(id, userId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Post()
+  create(@Body() dto: CreateOccupationDto) {
+    return this.occupationsService.create(dto);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Put(':id')
+  update(@Param('id') id: number, @Body() dto: UpdateOccupationDto) {
+    return this.occupationsService.update(id, dto);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    return this.occupationsService.remove(id);
   }
 }

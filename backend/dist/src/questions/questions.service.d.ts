@@ -6,44 +6,44 @@ export declare class QuestionsService {
     constructor(prisma: PrismaService);
     findAll(type?: string): Promise<{
         id: string;
-        content: string;
-        type: string;
         createdAt: Date;
         updatedAt: Date;
+        content: string;
+        type: string;
     }[]>;
     findBalancedTestSet(perType?: number): Promise<{
         id: string;
-        content: string;
-        type: string;
         createdAt: Date;
         updatedAt: Date;
+        content: string;
+        type: string;
     }[]>;
     findOne(id: string): Promise<{
         id: string;
-        content: string;
-        type: string;
         createdAt: Date;
         updatedAt: Date;
+        content: string;
+        type: string;
     }>;
     create(dto: CreateQuestionDto): Promise<{
         id: string;
-        content: string;
-        type: string;
         createdAt: Date;
         updatedAt: Date;
+        content: string;
+        type: string;
     }>;
     update(id: string, dto: UpdateQuestionDto): Promise<{
         id: string;
-        content: string;
-        type: string;
         createdAt: Date;
         updatedAt: Date;
+        content: string;
+        type: string;
     }>;
     remove(id: string): Promise<{
         id: string;
-        content: string;
-        type: string;
         createdAt: Date;
         updatedAt: Date;
+        content: string;
+        type: string;
     }>;
 }
