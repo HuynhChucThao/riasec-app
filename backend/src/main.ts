@@ -31,11 +31,15 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      // Cho phép requests không có origin (curl, Postman, mobile apps, server-to-server)
       if (!origin) return callback(null, true);
+
       const allowedOrigins = [...defaultOrigins, ...configuredOrigins];
+      const isAllowedList = allowedOrigins.includes(origin);
+      const isVercelPreview = /\.vercel\.app$/.test(origin);
+
       if (
-        allowedOrigins.includes(origin) ||
+        isAllowedList ||
+        isVercelPreview ||
         process.env.FRONTEND_URL === '*' ||
         process.env.NODE_ENV !== 'production'
       ) {
